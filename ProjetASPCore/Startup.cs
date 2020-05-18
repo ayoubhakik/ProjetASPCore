@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProjetASPCore.Context;
+using ProjetASPCore.Services;
 
 namespace ProjetASPCore
 {
@@ -33,6 +35,10 @@ namespace ProjetASPCore
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddDbContext<EtudiantContext>();
+            services.AddSingleton<IEtudiantService, EtudiantService>();
+            services.AddSingleton<IDepartementService, DepartementService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
