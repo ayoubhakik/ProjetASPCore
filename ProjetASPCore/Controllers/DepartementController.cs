@@ -14,12 +14,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace projetASP.Controllers
 {
 
     public class DepartementController : Controller
     {
+        private readonly IEmailService _emailService;
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -42,8 +44,8 @@ namespace projetASP.Controllers
                                                     "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
                                                     "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
                                                     "</div>";
-                        Boolean Result = SendEmail(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
-                        if (Result == true)
+                        var Result = SendEmailAsync(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
+                        if (Result.AsyncState != null)
                         {
                             //Json(Result, JsonRequestBehavior.AllowGet);
                         }
@@ -56,36 +58,14 @@ namespace projetASP.Controllers
 
 
         }
-       
-        public bool SendEmail(String toEmail, string subject, string EmailBody)
+
+        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
-            try
-            {
-                String senderEmail = WebConfigurationManager.AppSettings["senderEmail"];
-                String senderPassword = WebConfigurationManager.AppSettings["senderPassword"];
-                /* WebMail.SmtpServer = "smtp.gmail.com";
-                 WebMail.SmtpPort = 587;
-                 WebMail.SmtpUseDefaultCredentials = true;
-                 WebMail.UserName = sendereEmail;
-                 WebMail.Password = senderPassword;
-                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                client.EnableSsl = true;
-                client.Timeout = 100000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
-                Message.IsBodyHtml = true;
-                Message.BodyEncoding = UTF8Encoding.UTF8;
-                client.Send(Message);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            await _emailService.SendEmailAsync(email, subject, message);
+            return Ok();
         }
+
+        
 
         public ActionResult DeleteAllStudents()
         {
