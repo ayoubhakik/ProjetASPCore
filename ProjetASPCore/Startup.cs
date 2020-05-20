@@ -26,7 +26,14 @@ namespace ProjetASPCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+<<<<<<< HEAD
           
+=======
+            services.AddSession(options =>
+          {
+              options.IdleTimeout = TimeSpan.FromSeconds(1800);
+          });
+>>>>>>> hasnae-dev
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -58,7 +65,7 @@ namespace ProjetASPCore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
