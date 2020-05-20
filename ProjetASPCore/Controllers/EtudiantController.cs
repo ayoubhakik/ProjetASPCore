@@ -8,18 +8,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Mvc;
 using ProjetASPCore.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ProjetASPCore.Services;
+using System.Threading.Tasks;
 
 namespace projetASP.Controllers
 {
+    
     public class EtudiantController : Controller
     {
+        private readonly IEmailService _emailService;
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -289,86 +294,40 @@ namespace projetASP.Controllers
 
         public ActionResult SendEmailToUser()
         {
-            bool Result = false;
-            Etudiant etudiants = etudiantContext.Etudiants.Find(Session["userId"]);
+            
+            Etudiant etudiants = etudiantContext.Etudiants.Find(123);
             string email = etudiants.email;
             string subject = "Modification";
             ViewBag.nom = etudiants.nom;
             ViewBag.prenom = etudiants.prenom;
-            Result = SendEmail(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
+            var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result == true)
+            if (Result !=null)
             {
-                Json(Result, JsonRequestBehavior.AllowGet);
+
                 return RedirectToAction("Modification");
             }
             return View();
         }
-        public bool SendEmail(String toEmail, string subject, string EmailBody)
-        {
-            try
-            {
-                String senderEmail = WebConfigurationManager.AppSettings["senderEmail"];
-                String senderPassword = WebConfigurationManager.AppSettings["senderPassword"];
-
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                client.EnableSsl = true;
-                client.Timeout = 100000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
-                Message.IsBodyHtml = true;
-                Message.BodyEncoding = UTF8Encoding.UTF8;
-                client.Send(Message);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
         public ActionResult SendEmailToUser1(String email, String nom, String prenom)
         {
-            bool Result = false;
+            
             string subject = "Inscription";
-            Result = SendEmail(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
+            var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result == true)
+            if (Result.AsyncState!=null)
             {
-                Json(Result, JsonRequestBehavior.AllowGet);
+                
                 return RedirectToAction("Authentification1", "User");
             }
             return View();
         }
-        public bool SendEmail1(String toEmail, string subject, string EmailBody)
+        [HttpPost]
+        
+        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
-            try
-            {
-                String senderEmail = WebConfigurationManager.AppSettings["senderEmail"];
-                String senderPassword = WebConfigurationManager.AppSettings["senderPassword"];
-                /* WebMail.SmtpServer = "smtp.gmail.com";
-                 WebMail.SmtpPort = 587;
-                 WebMail.SmtpUseDefaultCredentials = true;
-                 WebMail.UserName = sendereEmail;
-                 WebMail.Password = senderPassword;
-                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                client.EnableSsl = true;
-                client.Timeout = 100000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
-                Message.IsBodyHtml = true;
-                Message.BodyEncoding = UTF8Encoding.UTF8;
-                client.Send(Message);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            await _emailService.SendEmailAsync(email, subject, message);
+            return Ok();
         }
     }
 }
