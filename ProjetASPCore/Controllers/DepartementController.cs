@@ -61,8 +61,8 @@ namespace projetASP.Controllers
         {
             try
             {
-                String senderEmail = WebConfigurationManager.AppSettings["senderEmail"];
-                String senderPassword = WebConfigurationManager.AppSettings["senderPassword"];
+                String senderEmail = "test@email.com";
+                String senderPassword = "emailPassword";
                 /* WebMail.SmtpServer = "smtp.gmail.com";
                  WebMail.SmtpPort = 587;
                  WebMail.SmtpUseDefaultCredentials = true;
@@ -317,22 +317,26 @@ namespace projetASP.Controllers
 
 
         [HttpPost]
-        public ActionResult ImporterEtudiantExcel(HttpPostedFileBase excelFile)
+        public ActionResult ImporterEtudiantExcel(IFormFile  excelFile)
         {
+
+
             try
             {
                 if (Request != null)
                 {
 
                     EtudiantContext db = new EtudiantContext();
-                    HttpPostedFileBase file = Request.Files["excelfile"];
-                    if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName) && (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx")))
+                    IFormFile file = Request.Form.Files["excelfile"];
+                    Byte[] contentLength =new UTF8Encoding(true).GetBytes(file.FileName);
+
+                    if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName) && (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx")))
                     {
                         string fileName = file.FileName;
                         string fileContentType = file.ContentType;
-                        byte[] fileBytes = new byte[file.ContentLength];
-                        var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
-                        using (var package = new ExcelPackage(file.InputStream))
+                        byte[] fileBytes = new byte[file.Length];
+                        var data = new StreamReader(file.OpenReadStream());
+                        using (var package = new ExcelPackage(file.OpenReadStream()))
                         {
                             var currentSheet = package.Workbook.Worksheets;
                             var workSheet = currentSheet.First();
@@ -399,21 +403,23 @@ namespace projetASP.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImporterNoteExcel(HttpPostedFileBase excelFile)
+        public ActionResult ImporterNoteExcel(IFormFile excelFile)
         {
             try
             {
                 if (Request != null)
                 {
                     EtudiantContext db = new EtudiantContext();
-                    HttpPostedFileBase file = Request.Files["excelfile"];
-                    if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName) && (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx")))
+                    IFormFile file = Request.Form.Files["excelfile"];
+                    Byte[] contentLength = new UTF8Encoding(true).GetBytes(file.FileName);
+
+                    if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName) && (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx")))
                     {
                         string fileName = file.FileName;
                         string fileContentType = file.ContentType;
-                        byte[] fileBytes = new byte[file.ContentLength];
-                        var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
-                        using (var package = new ExcelPackage(file.InputStream))
+                        byte[] fileBytes = new byte[file.Length];
+                        var data = new StreamReader(file.OpenReadStream());
+                        using (var package = new ExcelPackage(file.OpenReadStream()))
                         {
                             var currentSheet = package.Workbook.Worksheets;
                             var workSheet = currentSheet.First();
