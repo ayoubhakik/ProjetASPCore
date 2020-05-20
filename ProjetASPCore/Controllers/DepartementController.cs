@@ -1006,7 +1006,7 @@ namespace projetASP.Controllers
             return null;
         }
         [HttpPost]
-        public void ExtraireNonValide()
+        public IActionResult ExtraireNonValide()
         {
             EtudiantContext students = new EtudiantContext();
 
@@ -1046,19 +1046,22 @@ namespace projetASP.Controllers
             //Envoi du fichier dans par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=EtudiantNonValideCompte.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=EtudiantNonValideCompte.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
             }
         }
         [HttpGet]
-        public void ExportExcel()
+        public IActionResult ExportExcel()
         {
             string[] choixTab = new string[3];
             string choixAffecte;
@@ -1166,15 +1169,18 @@ namespace projetASP.Controllers
             //Envoi du fichier  par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
             }
 
 
@@ -1183,7 +1189,7 @@ namespace projetASP.Controllers
 
         ///fonction pour les info
         [HttpGet]
-        public void ExportExcelAttributed()
+        public IActionResult ExportExcelAttributed()
         {
             //Données à exporter
             EtudiantContext students = new EtudiantContext();
@@ -1243,15 +1249,18 @@ namespace projetASP.Controllers
             //Envoi du fichier  par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=listeAttribution.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=listeAttribution.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
             }
 
 
