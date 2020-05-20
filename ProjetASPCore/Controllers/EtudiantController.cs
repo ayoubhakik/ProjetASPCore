@@ -8,18 +8,20 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-
+using Microsoft.AspNetCore.Session;
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Mvc;
 using ProjetASPCore.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ProjetASPCore.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace projetASP.Controllers
 {
     public class EtudiantController : Controller
     {
+        private readonly MyComponent context;
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -36,7 +38,7 @@ namespace projetASP.Controllers
         public ActionResult Index()
         {
             ViewBag.Current = "Home";
-
+           
             if (UserValide.IsValid() && UserValide.IsStudent())
             {
 
@@ -66,7 +68,7 @@ namespace projetASP.Controllers
 
             if (UserValide.IsValid() && UserValide.IsStudent())
             {
-                Etudiant etudiants = etudiantContext.Etudiants.Find(Session["userId"]);
+                Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
 
                 return View(etudiants);
             }
@@ -149,7 +151,7 @@ namespace projetASP.Controllers
             ViewBag.Current = "Consulter";
             if (UserValide.IsValid() && UserValide.IsStudent())
             {
-                Etudiant etudiants = etudiantContext.Etudiants.Find(Session["userId"]);
+                Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
 
                 return View(etudiants);
             }
@@ -161,12 +163,12 @@ namespace projetASP.Controllers
 
         public ActionResult Deconnecter()
         {
-            Session["userId"] = null;
-            Session["cin"] = null;
-            Session["nom"] = null;
-            Session["prenom"] = null;
-            Session["role"] = null;
-            Session.Abandon();
+            HttpContext.Session.SetString("userId", null);
+            HttpContext.Session.SetString("cin",null);
+            HttpContext.Session.SetString("nom", null);
+            HttpContext.Session.SetString("prenom", null);
+            HttpContext.Session.SetString("role",null);
+            HttpContext.Session.Clear();
             return RedirectToAction("Authentification1", "User");
 
         }
@@ -175,7 +177,7 @@ namespace projetASP.Controllers
 
         public ActionResult PrintConsultation()
         {
-            Etudiant etudiants = etudiantContext.Etudiants.Find(Session["userId"]);
+            Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
             var q = new ViewAsPdf("RecuEtudiant", etudiants);
             if (UserValide.IsValid() && UserValide.IsStudent())
             {
@@ -290,7 +292,7 @@ namespace projetASP.Controllers
         public ActionResult SendEmailToUser()
         {
             bool Result = false;
-            Etudiant etudiants = etudiantContext.Etudiants.Find(Session["userId"]);
+            Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
             string email = etudiants.email;
             string subject = "Modification";
             ViewBag.nom = etudiants.nom;
@@ -299,7 +301,7 @@ namespace projetASP.Controllers
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
             if (Result == true)
             {
-                Json(Result, JsonRequestBehavior.AllowGet);
+                Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
                 return RedirectToAction("Modification");
             }
             return View();
@@ -336,7 +338,7 @@ namespace projetASP.Controllers
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
             if (Result == true)
             {
-                Json(Result, JsonRequestBehavior.AllowGet);
+                Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
                 return RedirectToAction("Authentification1", "User");
             }
             return View();

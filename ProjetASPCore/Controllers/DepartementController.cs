@@ -8,12 +8,15 @@ using ProjetASPCore.Models;
 using ProjetASPCore.Services;
 using Rotativa.AspNetCore;
 using System;
+using System.Web.Http;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace projetASP.Controllers
 {
@@ -398,7 +401,7 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public ActionResult ImporterNoteExcel(HttpPostedFileBase excelFile)
         {
             try
@@ -1057,7 +1060,7 @@ namespace projetASP.Controllers
                 Response.End();
             }
         }
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public void ExportExcel()
         {
             string[] choixTab = new string[3];
