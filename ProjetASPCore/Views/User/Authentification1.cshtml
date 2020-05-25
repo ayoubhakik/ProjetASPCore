@@ -1,0 +1,215 @@
+﻿@model projetASP.Models.Settings
+
+@{
+    /**/
+
+    ViewBag.Title = "Authentification";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+
+        .expire {
+            background-image: url(../../Content/img/dark.jpg) !important;
+            height: 100%;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+            background-position: center center;
+            overflow: hidden; /* Hide scrollbars */
+        }
+    </style>
+    <title>Login V18</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="~/Content/img/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/main3.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/StyleSheet1.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+    @if (DateTime.Now <= ViewBag.DatedeRappel)
+    {
+        <div class="limiter">
+            <div class="container-login100" style="background: linear-gradient(-225deg,  #4682B4 0%,#B49082  100%,transparent 0%);
+       background: linear-gradient(to top,#B49082 0%, #4682B4 100%);
+       background-attachment: fixed;
+       background-repeat: no-repeat;">
+                <table class="table table-bordered table-danger" style="width:500px;height:100px;margin-left:1000px;">
+                    <tr>
+                        <th>Tache</th>
+                        <th>Date de fin</th>
+                    </tr>
+                    <tr>
+                        <th>Date de fin d'inscription</th>
+
+                        @if (@ViewBag.DatedeRappel != null)
+                        {
+                            <td>@ViewBag.DatedeRappel</td>
+                        }
+                        else
+                        {
+                            <td>pas encore réclamé</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <th>Date d'attribution de filière</th>
+
+                        @if (@ViewBag.Delai != null)
+                        {
+                            <td>@ViewBag.Delai</td>
+                        }
+                        else
+                        {
+                            <td>pas encore réclamé</td>
+                        }
+                    </tr>
+                </table>
+                <div class="wrap-login100 " style="position:relative;bottom:170px;">
+
+                    @using (Html.BeginForm("Authentification1", "User", FormMethod.Post, new { @class = "login100-form validate-form" }))
+                    {
+
+
+                        if (@ViewBag.Message != null)
+                        {
+                            <div class="alert alert-danger">
+                                <strong>@ViewBag.Message!</strong>
+                            </div>
+                        }
+                        <span class="login100-form-title p-b-43" style="font-weight:bold;color:white;">
+                            AUTHENTIFICATION
+                        </span>
+
+
+                        <div class="wrap-input100 validate-input" data-validate="Valid cne is required">
+                            <input type="text" name="cne" placeholder="CNE" style="color:#11273F;" />
+                        </div>
+                        <div class="wrap-input100 validate-input" data-validate="Valid cin is required">
+                            <input type="text" name="cin" placeholder="CIN" />
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Password is required">
+                            <input type="password" name="mdp" placeholder="Mot de passe" />
+                        </div>
+
+                        <div class="flex-sb-m w-full p-t-3 p-b-32">
+                            <div class="contact100-form-checkbox">
+
+                                <input class="input-checkbox100" id="chkb1" type="checkbox">
+                                @Html.Label("ckb1", "Remember me", new { @class = "label-checkbox100", @value = "ckb1" })
+
+                            </div>
+
+                            <div>
+                                <a href="#" class="text1">
+                                    Oublié mot de passe?
+                                </a>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="container-login100-form-btn">
+                            <button class="login100-form-btn" name="loginBtn" value="Login" style="color:#B49082; font-size: 20px;
+    line-height: 1.2;font-weight:bold;">
+                                Se connecter
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" onclick="window.location='/User/Authentification'" class="fb-btn">Authentifiez autant que <span>Département</span></button>
+                        </div>
+                        <div class="foot-lnk" style="text-align:center;">
+                            <p class="text--center">N'est pas encore inscrit? <a href="/Etudiant/Inscription">Inscrivez-vous</a></p>
+                        </div>
+
+                    }
+                    <section id="slideshow" class=" d-none d-lg-block d-xl-block   ">
+                        <div class="entire-content d-none d-lg-block d-xl-block">
+                            <div class="content-carrousel">
+                                <figure class="shadow  "><img src="~/Content/img/gpmc.jpg" /></figure>
+                                <figure class="shadow  "><img src="~/Content/img/gtr.jpg" /></figure>
+                                <figure class="shadow "><img src="~/Content/img/indus.jpg" /></figure>
+
+                                <figure class="shadow"><img src="~/Content/img/info.jpg" /></figure>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (DateTime.Now > ViewBag.DatedeRappel)
+    {
+        <div class="expire">
+            <p style="color:white;text-align:center;font-weight:bold;font-size:45px;position:relative;top:45%;text-shadow:4px 4px #000;">LA DATE A EXPEREE &#128549</p>
+            @if (@ViewBag.Attributted == true)
+            {
+                <p Style="color:white;position:relative;top:55%;float:right;right:20px;">
+                    <span id="bl" style="visibility: visible">
+                        <text style="font-size:20px;">Les résultats d'attribution de filière sont disponibles</text>
+                        <i class="fa fa-angle-double-right" style="font-size:70px;position:relative;top:20px"></i>
+                    </span>
+                    <a href="~/User/Resultat" target="_blank" style="color:white;text-decoration:none;">Voir les résultas</a>
+                </p>
+            }
+        </div>
+    }
+
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Content/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/js/main.js"></script>
+    <script>
+        function blink(ob) {
+            if (ob.style.visibility == "visible") {
+                ob.style.visibility = "hidden";
+            }
+            else {
+                ob.style.visibility = "visible";
+            }
+        }
+        setInterval("blink(bl)", 700);
+    </script>
+
+</body>
+</html>

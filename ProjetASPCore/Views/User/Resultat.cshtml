@@ -1,0 +1,208 @@
+﻿@model IEnumerable<projetASP.Models.Etudiant>
+@{
+    Layout = null;
+
+}
+<html>
+
+<meta charset="utf-8" />
+<link rel="apple-touch-icon" sizes="76x76" href="../../Content/assets/img/apple-icon.png">
+<link rel="icon" type="image/png" href="../../Content/assets/img/favicon.png">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+<!--     Fonts and icons     -->
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+<!-- CSS Files -->
+<link href="../../Content/css/material.css" rel="stylesheet" />
+<!-- CSS Just for demo purpose, don't include it in your project -->
+<link href="../../Content/demo/demo.css" rel="stylesheet" />
+<style>
+
+    .nav-link {
+        color: red;
+        background-color: white;
+    }
+
+
+    .card-header {
+        text-align: center;
+    }
+
+    .lefter {
+        float: left;
+    }
+
+    .righter {
+        float: right;
+        margin-left: 30px;
+    }
+
+    .clearer {
+        clear: both;
+    }
+
+    .lefter > table > tr > td > span {
+        color: black;
+    }
+
+    input {
+        border-radius: 5px 5px;
+        padding: 10px;
+    }
+
+    .button {
+        width: 60px;
+        height: 60px;
+        color: silver;
+        border: 3px solid silver;
+        border-radius: 60px;
+        box-shadow: 0 0 10px 1px black;
+        position: fixed;
+        bottom: 5%;
+        left: 56.2%;
+        margin-left: -30px;
+        transition: all 0.5s ease;
+    }
+
+        .button a {
+            display: block;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: silver;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 35.2941176471px;
+            padding-top: 10px;
+        }
+
+            .button a:hover {
+                color: black;
+            }
+</style>
+
+<body>
+    <div class="content" id="2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="card">
+
+                        <div class="card-header" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);">
+                            <h4 class="card-title" style="color:white;">
+                                Resultat d'attribution
+                            </h4>
+                        </div>
+                        <div class="card-body table-responsive">
+
+
+
+                            <table class="table table-hover">
+                                <thead style="color:#B49082;">
+                                <th style="font-weight:bold;">Cne</th>
+                                <th style="font-weight:bold;">Cin</th>
+                                <th style="font-weight:bold;">Nom</th>
+                                <th style="font-weight:bold;">Prenom</th>
+                                <th style="font-weight:bold;">Chiox</th>
+                                <th style="font-weight:bold;">Filiere Attribue</th>
+
+
+                                </thead>
+                                <tbody style="color:black !important">
+                                    @if (Model == null)
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                        foreach (var item in Model)
+                                        {
+                                            if (!item.Redoubler)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.cne)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.cin)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.nom)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.prenom)
+                                                    </td>
+
+                                                    <td>
+                                                        @item.Choix
+                                                    </td>
+                                                    <td>
+                                                        @if (item.idFil == 1)
+                                                        {
+                                                            <span>Info</span>
+                                                        }
+                                                        @if (item.idFil == 2)
+                                                        {
+                                                            <span>Gtr</span>
+                                                        }
+                                                        @if (item.idFil == 3)
+                                                        {
+                                                            <span>Indus</span>
+                                                        }
+                                                        @if (item.idFil == 4)
+                                                        {
+                                                            <span>GPMC</span>
+                                                        }
+                                                    </td>
+
+                                                </tr>
+                                            }
+
+                                        }
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+        <div class="container-fluid" style="text-align:center;background-color:rgba(0,0,0,1);">Copyright © 2020 ENSA. All Rights Reserved.</div>
+        <script src="~/Content/vendor/jquery/jquery-3.2.1.min.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/vendor/animsition/js/animsition.min.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/vendor/bootstrap/js/popper.js"></script>
+        <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/vendor/select2/select2.min.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/vendor/daterangepicker/moment.min.js"></script>
+        <script src="~/Content/vendor/daterangepicker/daterangepicker.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/vendor/countdowntime/countdowntime.js"></script>
+        <!--===============================================================================================-->
+        <script src="~/Content/js/main1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="js/libs.min.js"></script>
+        <script>
+            $(".button").click(function () {
+                $(".button").hide()
+            });
+        </script>
+        </script>
+
+</body>
+</html>
+
+
+

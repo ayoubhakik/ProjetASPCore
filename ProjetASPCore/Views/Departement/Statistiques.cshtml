@@ -1,0 +1,130 @@
+﻿
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_DepartementLayout.cshtml";
+}
+
+
+
+<div class="content">
+    <div class="container-fluid">
+        <h2 style="color:black">
+            <center>
+                <i class="material-icons" >timeline</i>
+                Statistique des choix des Etudiants
+            </center>
+
+        </h2>
+        <div class="row">
+            <div class="card card-chart">
+                    
+                        <center><img src="@Url.Action("Chart")" class="col-xl-8 col-lg-8" /></center>
+                   
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header  card-header-icon" >
+                        <div class="card-icon" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);">
+                            <i class="fa fa-industry" aria-hidden="true"></i>
+                        </div>
+                        <p class="card-category">GIND</p>
+                        <h3 class="card-title">@ViewBag.indus</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i>@ViewBag.indus
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header  card-header-icon">
+                        <div class="card-icon" style="background:linear-gradient(to bottom, #B49082, #B49290, #544E61);">
+                            <i class='fa fa-flask' style='font-size:36px'></i>
+                        </div>
+                        <p class="card-category">GPMC</p>
+                        <h3 class="card-title">@ViewBag.gpmc</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i>@ViewBag.gpmc
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-icon" >
+                        <div class="card-icon"  style="background:linear-gradient(to bottom, #11273F, #061323, #204773);">
+                            <i class="fa fa-laptop" style="font-size:36px"></i>
+                        </div>
+                        <p class="card-category">GINF</p>
+                        <h3 class="card-title">@ViewBag.info</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i> @ViewBag.info
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header  card-header-icon" >
+                        <div class="card-icon" style="background:linear-gradient(to bottom, #B49082, #B49290, #544E61);">
+                            <i class='fas fa-network-wired' style='font-size:36px'></i>
+                        </div>
+                        <p class="card-category">GTR</p>
+                        <h3 class="card-title">@ViewBag.gtr</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i> @ViewBag.gtr
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-icon" >
+                        <div class="card-icon">
+                            <i class="material-icons">list</i>
+                        </div>
+                        <p class="card-category">Pas encore</p>
+                        <h3 class="card-title">@ViewBag.nbrReste</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i>@ViewBag.nbrReste
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">list</i>
+                        </div>
+                        <p class="card-category">Nombre Totale</p>
+                        <h3 class="card-title">@ViewBag.nbrTotal</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons"></i>@ViewBag.nbrTotal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<div class="container-fluid" style="text-align:center;background-color:rgba(0,0,0,1);">Copyright © 2020 ENSA. All Rights Reserved.</div>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>

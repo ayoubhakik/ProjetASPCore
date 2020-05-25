@@ -1,0 +1,153 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_LayoutEtudiant.cshtml";
+}
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/Content/css/StyleSheet1.css">
+    <style>
+       
+    </style>
+</head>
+<body>
+    <ul id="caroussel">
+        <li class="active " style="background: url(../../Content/img/informatique.jpg) center center no-repeat;">
+            <span class="lien">GINF</span>
+
+            <div class="cover">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="line animated bounceInLeft"></div>
+                        <h2>La filière</h2>
+                        <h1>Génie Informatique</h1>
+                        <h4>
+                            Discipline qui traite de la conception, du développement et de la fabrication de systèmes informatiques, à la fois matériels et logiciels.
+
+
+
+                            L'ingénieur en informatique, en plus de maîtriser, comme l'informaticien, les méthodes de conception et de développement des systèmes informatiques (matériels et logiciels), possède une formation de base en technique et des connaissances approfondies de la structure des ordinateurs, de leurs interfaces et des réseaux.
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            
+
+        </li>
+        <li style="background: url(../../Content/img/industriel.jpg) center center no-repeat;object-fit: cover;">
+            <span class="lien">GIND</span>
+            <div class="cover">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="line animated bounceInLeft"></div>
+                        <h2>La filière</h2>
+                        <h1>Génie Industriel</h1>
+                        <h4>Englobe la conception, l'amélioration et l'installation de systèmes intégrés. Il utilise les connaissances provenant des sciences mathématiques, physiques et sociales, ainsi que les principes et méthodes propres au “génie” ou, à l'art de l'ingénieur, dans le but de spécifier, prédire et évaluer les résultats découlant de ces systèmes. </h4>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li style="background: url(../../Content/img/reseau.jpg) center center no-repeat;object-fit: cover;">
+            <span class="lien">GTR</span> <div class="cover">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="line animated bounceInLeft"></div>
+                        <h2>La filière</h2>
+                        <h1>
+                              Génie des Systèmes des Télécommunications et Réseaux  
+                        </h1>
+                        <h4>A pour objectif de former des ingénieurs avec des compétences dans la conception, le développement, l’exploitation et la gestion des systèmes de traitement et de transmission de l’information, des systèmes fixes et mobiles, cellulaire et radio, l'administration de réseaux et de base de données et l’utilisation des équipements des télécoms.</h4>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li style="background: url(../../Content/img/procedes.jpg) center center no-repeat;object-fit: cover;">
+            <span class="lien">GPMC</span>
+            <div class="cover">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="line animated bounceInLeft"></div>
+                        <h2>La filière</h2>
+                        <h1>Génie Procédé Matériaux Céramiques</h1>
+                        <h4>Est une formation pluridisciplinaire et pratique visant à former des cadres dans l’industrie de production, de transformation et de l’utilisation des matériaux organiques et inorganiques (industrie des plastiques, peintures et vernis, colles et adhésifs, composites, métallurgie, mines, ciment, phosphates, céramiques, verres…). L’acquisition des connaissances théoriques et des compétences pratiques permet d’être en parfaite adéquation avec les besoins des industries Marocaines du secteur des matériaux.</h4>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div id="subnav"></div>
+
+    <a href="#" class="nav1" id="next"></a>
+    <a href="#" class="nav1" id="prev"></a>
+    <script src="../../Content/js/core/jquery.min.js"></script>
+    <script src="../../Content/js/core/popper.min.js"></script>
+    <script src="../../Content/js/core/bootstrap-material-design.min.js"></script>
+    <script src="https://unpkg.com/default-passive-events"></script>
+    <script src="../../Content/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <!-- Chartist JS -->
+    <script src="../../Content/js/plugins/chartist.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="../../Content/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../../Content/js/material-dashboard.js?v=2.1.0"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            var i = 0;
+            var max = $('#caroussel > li').length - 1;
+
+            $('#caroussel > li').each(function (i) {
+                var titreNom = $(this).children('.lien').html();
+                $('#subnav').append('<a href="#" id="' + i + '">' + titreNom + '<span></span></a>');
+            });
+
+            $("#caroussel > li").eq(i).addClass('active');
+            $('#subnav > a').eq(i).addClass('active');
+
+            $('#next').click(function (e) {
+                (e).preventDefault();
+                if (i < max) {
+                    i++;
+                    $('#caroussel > li').removeClass('active').eq(i).addClass('active');
+                    $('#subnav > a').removeClass('active').eq(i).addClass('active');
+                }
+                else {
+                    i = 0;
+                    $('#caroussel > li').removeClass('active').eq(i).addClass('active');
+                    $('#subnav > a').removeClass('active').eq(i).addClass('active');
+                }
+            });
+
+            $('#prev').click(function (e) {
+                (e).preventDefault();
+                if (i > 0) {
+                    i--;
+                    $('#caroussel > li').removeClass('active').eq(i).addClass('active');
+                    $('#subnav > a').removeClass('active').eq(i).addClass('active');
+                }
+                else {
+                    i = max;
+                    $('#caroussel > li').removeClass('active').eq(i).addClass('active');
+                    $('#subnav > a').removeClass('active').eq(i).addClass('active');
+                }
+            });
+
+            $('#subnav > a').click(function (e) {
+                (e).preventDefault();
+                i = $(this).attr('id');
+                $(this).addClass('active');
+                $('#subnav > a').removeClass('active').eq(i).addClass('active');
+                $('#caroussel > li').removeClass('active').eq(i).addClass('active');
+            });
+
+        });
+    </script>
+
+</body>
+</html>
+
