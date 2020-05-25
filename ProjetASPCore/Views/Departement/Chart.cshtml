@@ -1,0 +1,57 @@
+﻿<title>@ViewData["Title"] - Column Chart</title>  
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  
+  
+<div id="chart_div"></div>  
+<script type="text/javascript">  
+  
+    google.charts.load('current', {  
+        packages: ['corechart', 'bar']  
+    });  
+    google.charts.setOnLoadCallback(LoadData);  
+  
+    function LoadData() {  
+        $.ajax({  
+  
+            url: 'ColumnChart/PopulationChart',  //controleur/fonction
+            dataType: "json",  
+            type: "GET",  
+            error: function(xhr, status, error) {  
+                var err = eval("(" + xhr.responseText + ")");  
+                toastr.error(err.message);  
+            },  
+            success: function(data) {  
+                PopulationChart(data);/fonction  
+                return false;  
+            }  
+        });  
+        return false;  
+    }  
+  
+    function PopulationChart(data) {  
+        var dataArray = [  
+            ['X', 'Y']  
+        ];  
+        $.each(data, function(i, item) {  
+            dataArray.push([item.X, item.Y ]);  
+        });  
+        var data = google.visualization.arrayToDataTable(dataArray);  
+        var options = {  
+            title: 'Statistique Des filières ',  
+            chartArea: {  
+                width: '50%'  
+            },  
+            colors: ['#b0120a'],  
+            hAxis: {  
+                title: 'Filière',  
+                minValue: 0  
+            },  
+            vAxis: {  
+                title: 'Total etudients'  
+            }  
+        };  
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));  
+  
+        chart.draw(data, options);  
+        return false;  
+    }  
+</script>  

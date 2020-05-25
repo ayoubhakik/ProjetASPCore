@@ -1,0 +1,254 @@
+﻿﻿@model projetASP.Models.Etudiant
+@{
+    Layout = null;
+}
+<style>
+    body {
+        background-image: url(../../Content/img/dark.jpg) !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center center;
+        background-attachment: fixed;
+        z-index: 1;
+    }
+
+    tr {
+        color: white;
+        font-family: normal;
+        font-size: 15px;
+    }
+
+    .field {
+        background-color: rgba(255,255,255,0.2) !important;
+        width: 700px !important;
+        border-radius: 40px !important;
+        margin-left: 1% !important;
+    }
+
+    input {
+        border-radius: 10px !important
+    }
+
+    .dateN {
+        color: white;
+        font-size: 10px;
+        float: left;
+    }
+
+    .btn-dark {
+        font-size: 20px;
+    }
+</style>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Inscription</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    @*Styles.Render("~/Content/css")*@
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    @Styles.Render("~/Content/css/Inscription.css")
+</head>
+<body>
+    <!-- MultiStep Form -->
+    @if (DateTime.Now <= ViewBag.DatedeRappel)
+    {
+        <div class="row justify-content-center form">
+            <div class="col-md-6">
+                @using (Html.BeginForm("Inscription", "Etudiant", FormMethod.Post, new { id = "msform", name = "msform" }))
+                {
+                    <!-- progressbar -->
+                    <ul id="progressbar">
+                        <li class="active">Données Personnelles</li>
+                        <li>Mot de pass</li>
+                        <li>Choix De Filiere</li>
+                    </ul>
+
+                    <fieldset class="field col-md-12">
+                        <h2 class="fs-title" style="color:white">Données Personnelles</h2>
+                        <br />
+                        @Html.TextBoxFor(x => x.prenom, new { placeholder = "Prenom" })
+                        @Html.ValidationMessageFor(x => x.prenom)
+                        @Html.TextBoxFor(x => x.nom, new { placeholder = "Nom" })
+                        @Html.ValidationMessageFor(x => x.nom)
+                        @Html.TextBoxFor(x => x.cin, new { placeholder = "CIN" })
+                        @Html.ValidationMessageFor(x => x.cin)
+                        @Html.TextBoxFor(x => x.cne, new { placeholder = "CNE" })
+                        @Html.ValidationMessageFor(x => x.cne)
+                        @Html.LabelFor(x => x.dateNaiss, "Date de naissance :", new { @class = "dateN" })
+                        @Html.TextBoxFor(x => x.dateNaiss, new { type = "date" })
+                        @Html.ValidationMessageFor(x => x.dateNaiss)
+                        @Html.TextBoxFor(x => x.lieuNaiss, new { placeholder = "Lieu de naissance" })
+                        @Html.ValidationMessageFor(x => x.lieuNaiss)
+                        @Html.TextBoxFor(x => x.phone, new { placeholder = "Tel" })
+                        @Html.ValidationMessageFor(x => x.phone)
+                        @Html.TextBoxFor(x => x.gsm, new { placeholder = "GSM" })
+                        @Html.ValidationMessageFor(x => x.gsm)
+                        @Html.TextBoxFor(x => x.email, new { placeholder = "Email" })
+                        @Html.ValidationMessageFor(x => x.email)
+                        @Html.TextBoxFor(x => x.address, new { placeholder = "Adresse" })
+                        @Html.ValidationMessageFor(x => x.address)
+                        @Html.TextBoxFor(x => x.nationalite, new { placeholder = "Nationalité" })
+                        @Html.ValidationMessageFor(x => x.nationalite)
+                        @Html.TextBoxFor(x => x.ville, new { placeholder = "Ville" })
+                        @Html.ValidationMessageFor(x => x.ville)
+                        <input type="button" name="next" class="next action-button" value="Next" />
+                    </fieldset>
+
+
+
+
+                    <fieldset class="field col-md-12">
+                        <h2 class="fs-title" style="color:white">Mot de Pass</h2>
+                        <br />
+                        @Html.PasswordFor(x => x.password, new { placeholder = "Mot de pass" })
+                        @Html.ValidationMessageFor(x => x.password)
+                        @Html.Password("cpass", null, new { placeholder = "Confirmer Mot de pass", id = "cpass" })
+                        <input type="button" name="previous" class="previous action-button-previous" style="color:black" value="Previous" />
+                        <input type="button" name="next" class="next action-button" value="Next" />
+                    </fieldset>
+
+
+
+
+                    <fieldset class="field col-md-12">
+                        <h2 class="fs-title" style="color:white">Baccalauréat</h2>
+                        <br />
+                        @Html.DropDownListFor(x => x.typeBac, ViewBag.typebac as SelectList, "Type de BAC", new { @class = "btn btn-dark btn-lg dropdown-toggle m-1" })
+                        <br />
+                        @Html.ValidationMessageFor(x => x.typeBac)
+                        <br />
+                        @Html.TextBoxFor(x => x.anneeBac, new { placeholder = "Année d'obtention du bac", required = "required" })
+                        <br />
+                        @Html.ValidationMessageFor(x => x.anneeBac)
+                        <br />
+                        @Html.TextBoxFor(x => x.noteBac, new { placeholder = "Note de BAC" })
+                        <br />
+                        @Html.ValidationMessageFor(x => x.noteBac)
+                        <br />
+                        @Html.DropDownListFor(x => x.mentionBac, ViewBag.mentionbac as SelectList, "Mention", new { @class = "btn btn-dark btn-lg dropdown-toggle mb-2" })<br />
+                        <h2 class="fs-title" style="color:white">Choix de Filière</h2>
+                        <table summary="" role="presentation" cellPadding="4" cellSpacing="0" class="form-matrix-table" data-component="matrix">
+                            <tbody>
+                                <tr>
+                                    <th style="border:none; width: 450px">
+                                    </th>
+                                    <th scope="col" class="form-matrix-column-headers form-matrix-column_0">
+                                        <label id="label_1_col_0"> 1ere Choix </label>
+                                    </th>
+                                    <th scope="col" class="form-matrix-column-headers form-matrix-column_1">
+                                        <label id="label_1_col_1"> 2 ème choix </label>
+                                    </th>
+                                    <th scope="col" class="form-matrix-column-headers form-matrix-column_2">
+                                        <label id="label_1_col_2"> 3 eme Choix </label>
+                                    </th>
+                                </tr>
+                                <tr role="group" aria-labelledby="label_1 label_1_row_0">
+                                    <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                                        <label id="label_1_row_0"> Genie Informatique </label>
+                                    </th>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="F1" type="radio" name="choix1" value="F" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="F2" type="radio" name="choix2" value="F" onClick=desactivefilieres() />
+
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="F3" type="radio" name="choix3" value="F" onClick=desactivefilieres() />
+                                    </td>
+                                </tr>
+                                <tr role="group" aria-labelledby="label_1 label_1_row_1">
+                                    <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                                        <label id="label_1_row_1"> Genie Telecominication et Réseau </label>
+                                    </th>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="T1" type="radio" name="choix1" value="T" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="T2" type="radio" name="choix2" value="T" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="T3" type="radio" name="choix3" value="T" onClick=desactivefilieres() />
+                                    </td>
+                                </tr>
+                                <tr role="group" aria-labelledby="label_1 label_1_row_2">
+                                    <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                                        <label id="label_1_row_2"> Genie Indus </label>
+                                    </th>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="D1" type="radio" name="choix1" value="D" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="D2" type="radio" name="choix2" value="D" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="D3" type="radio" name="choix3" value="D" onClick=desactivefilieres() />
+                                    </td>
+                                </tr>
+                                <tr role="group" aria-labelledby="label_1 label_1_row_3">
+                                    <th scope="row" style="text-align:left" class="form-matrix-row-headers">
+                                        <label id="label_1_row_3"> Genie Procede et M.C </label>
+                                    </th>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="P1" type="radio" name="choix1" value="P" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="P2" type="radio" name="choix2" value="P" onClick=desactivefilieres() />
+                                    </td>
+                                    <td style="text-align:center" class="form-matrix-values">
+                                        <input id="P3" type="radio" name="choix3" value="P" onClick=desactivefilieres() />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br />
+                        <br />
+                        <input type="button" name="previous" class="previous action-button-previous" style="color:black" value="Previous" />
+                        <input type="submit" name="submit" class="submit action-button" value="Submit" id="submit" />
+                    </fieldset>
+                }
+            </div>
+        </div>
+    }
+    else if (DateTime.Now > ViewBag.DatedeRappel)
+    {
+        <p style="color:white;text-align:center;font-weight:bold;font-size:45px;position:relative;top:45%;text-shadow:4px 4px #000;">LA DATE A EXPEREE &#128549</p>
+    }
+    <!-- /.MultiStep Form -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    @Scripts.Render("~/Content/js/Inscription.js")
+    @Scripts.Render("~/Scripts/EtudiantScript.js")
+    <script type="text/javascript">
+        $(".submit").click(function () {
+            var pass = document.getElementById("pass").value;
+            var cpass = document.getElementById("cpass").value;
+            if (pass != cpass) {
+                alert("Les deux mots de pass doivent correspondre !");
+                return false;
+            }
+            else if (cin != ccin) {
+                alert("Les deux cin doivent correspondre !");
+                return false;
+            }
+            else if (email != cemail) {
+                alert("Les deux email doivent correspondre !");
+                return false;
+            }
+            else
+                return true;
+        });</script>
+    @if (ViewBag.message != null)
+    {
+        <script type="text/javascript">
+        window.onload = function () {
+            alert("@ViewBag.message");
+        };
+
+
+        </script>
+    }
+</body>
+</html>

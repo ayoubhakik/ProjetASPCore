@@ -5,9 +5,42 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus.Core" Version="1.5.4" />
+
+    <PackageReference Include="MailKit" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+=======
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="2.1.1" />  
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+
+ 
+  
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
+    <PackageReference Include="System.Web.Http" Version="4.0.0" />
+    <PackageReference Include="System.Web.Providers.Core" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\Web\Razor\v3.0\System.Web.Razor.dll</HintPath>
+    </Reference>
+>>>>>>> 9caf9bb818946a275fc9663c640dab9645056735
   </ItemGroup>
 
 </Project>
