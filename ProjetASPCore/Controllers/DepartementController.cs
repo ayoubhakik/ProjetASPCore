@@ -8,6 +8,7 @@ using ProjetASPCore.Models;
 using ProjetASPCore.Services;
 using Rotativa.AspNetCore;
 using System;
+using System.Web.Http;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +16,18 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 
+using System.Threading.Tasks;
+
+using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+
+
 namespace projetASP.Controllers
 {
 
     public class DepartementController : Controller
     {
+        private readonly IEmailService _emailService;
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -42,8 +50,8 @@ namespace projetASP.Controllers
                                                     "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
                                                     "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
                                                     "</div>";
-                        Boolean Result = SendEmail(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
-                        if (Result == true)
+                        var Result = SendEmailAsync(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
+                        if (Result.AsyncState != null)
                         {
                             //Json(Result, JsonRequestBehavior.AllowGet);
                         }
@@ -56,9 +64,10 @@ namespace projetASP.Controllers
 
 
         }
-       
-        public bool SendEmail(String toEmail, string subject, string EmailBody)
+
+        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
+<<<<<<< HEAD
             try
             {
                 String senderEmail = "test@email.com";
@@ -85,7 +94,13 @@ namespace projetASP.Controllers
             {
                 return false;
             }
+=======
+            await _emailService.SendEmailAsync(email, subject, message);
+            return Ok();
+>>>>>>> 619c1942865bc062e4f6dccb56af777309dce33d
         }
+
+        
 
         public ActionResult DeleteAllStudents()
         {
@@ -402,8 +417,13 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
+<<<<<<< HEAD
         [HttpPost]
         public ActionResult ImporterNoteExcel(IFormFile excelFile)
+=======
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public ActionResult ImporterNoteExcel(HttpPostedFileBase excelFile)
+>>>>>>> 619c1942865bc062e4f6dccb56af777309dce33d
         {
             try
             {
@@ -1012,7 +1032,7 @@ namespace projetASP.Controllers
             return null;
         }
         [HttpPost]
-        public void ExtraireNonValide()
+        public IActionResult ExtraireNonValide()
         {
             EtudiantContext students = new EtudiantContext();
 
@@ -1052,19 +1072,27 @@ namespace projetASP.Controllers
             //Envoi du fichier dans par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=EtudiantNonValideCompte.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=EtudiantNonValideCompte.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
             }
         }
+<<<<<<< HEAD
         [HttpGet]
+        public IActionResult ExportExcel()
+=======
+        [System.Web.Http.HttpGet]
         public void ExportExcel()
+>>>>>>> hasnae-dev
         {
             string[] choixTab = new string[3];
             string choixAffecte;
@@ -1172,15 +1200,18 @@ namespace projetASP.Controllers
             //Envoi du fichier  par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
             }
 
 
@@ -1189,7 +1220,7 @@ namespace projetASP.Controllers
 
         ///fonction pour les info
         [HttpGet]
-        public void ExportExcelAttributed()
+        public IActionResult ExportExcelAttributed()
         {
             //Données à exporter
             EtudiantContext students = new EtudiantContext();
@@ -1249,15 +1280,18 @@ namespace projetASP.Controllers
             //Envoi du fichier  par http
             using (var memoryStream = new MemoryStream())
             {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=listeAttribution.xlsx");
+                //Response.Clear();
+                //Response.ClearContent();
+                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                //Response.AddHeader("content-disposition", "attachment; filename=listeAttribution.xlsx");
+                //excel.SaveAs(memoryStream);
+                //memoryStream.WriteTo(Response.OutputStream);
+                //Response.Flush();
+                //Response.Clear();
+                //Response.End();
                 excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
+                var content = memoryStream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
             }
 
 
