@@ -67,37 +67,8 @@ namespace projetASP.Controllers
 
         public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
-<<<<<<< HEAD
-            try
-            {
-                String senderEmail = "test@email.com";
-                String senderPassword = "emailPassword";
-                /* WebMail.SmtpServer = "smtp.gmail.com";
-                 WebMail.SmtpPort = 587;
-                 WebMail.SmtpUseDefaultCredentials = true;
-                 WebMail.UserName = sendereEmail;
-                 WebMail.Password = senderPassword;
-                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                client.EnableSsl = true;
-                client.Timeout = 100000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
-                Message.IsBodyHtml = true;
-                Message.BodyEncoding = UTF8Encoding.UTF8;
-                client.Send(Message);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-=======
             await _emailService.SendEmailAsync(email, subject, message);
             return Ok();
->>>>>>> 619c1942865bc062e4f6dccb56af777309dce33d
         }
 
         
@@ -417,13 +388,8 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
-<<<<<<< HEAD
         [HttpPost]
         public ActionResult ImporterNoteExcel(IFormFile excelFile)
-=======
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public ActionResult ImporterNoteExcel(HttpPostedFileBase excelFile)
->>>>>>> 619c1942865bc062e4f6dccb56af777309dce33d
         {
             try
             {
@@ -1086,13 +1052,8 @@ namespace projetASP.Controllers
                 return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
             }
         }
-<<<<<<< HEAD
         [HttpGet]
         public IActionResult ExportExcel()
-=======
-        [System.Web.Http.HttpGet]
-        public void ExportExcel()
->>>>>>> hasnae-dev
         {
             string[] choixTab = new string[3];
             string choixAffecte;
