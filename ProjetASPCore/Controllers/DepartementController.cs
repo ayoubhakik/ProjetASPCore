@@ -1044,6 +1044,8 @@ namespace projetASP.Controllers
                 return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
             }
         }
+
+        //Exporter toutes les informations des étudiants
         [HttpGet]
         public IActionResult ExportExcel()
         {

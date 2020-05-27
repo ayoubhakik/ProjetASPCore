@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Services
 {
-    public class EtudiantService:IEtudiantService
+    public class EtudiantService : IEtudiantService
     {
         private EtudiantContext db = new EtudiantContext();
 
-        byte[] ExporterExcel()
+        public byte[] ExporterExcel()
         {
 
             string[] choixTab = new string[3];
@@ -132,6 +132,9 @@ namespace ProjetASPCore.Services
                 var content = memoryStream.ToArray();
                 return content;
             }
+
+        }
+
 
     }
 }
