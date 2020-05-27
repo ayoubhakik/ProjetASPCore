@@ -2271,7 +2271,7 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
-        public ActionResult Chart()
+       /* public ActionResult Chart()
         {
             //essayons de retourner tous les etudiants
             EtudiantContext db = new EtudiantContext();
@@ -2336,7 +2336,7 @@ namespace projetASP.Controllers
             chart.AddSeries(chartType: "Column", xValue: vx, yValues: vy);
             chart.Write("png");
             return null;
-        }
+        }*/
         [HttpPost]
         public IActionResult ExtraireNonValide()
         {
