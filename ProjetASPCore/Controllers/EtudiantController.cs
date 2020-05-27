@@ -34,7 +34,7 @@ namespace projetASP.Controllers
     {
 
         private readonly IEmailService _emailService;
-
+       
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -95,7 +95,7 @@ namespace projetASP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Modification([Bind(Include = "cne,nationalite,email,phone,gsm,address,ville,dateNaiss,lieuNaiss")] Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
+        public ActionResult Modification(Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
         {
             ViewBag.Current = "Modification";
 
@@ -105,54 +105,9 @@ namespace projetASP.Controllers
 
             Etudiant etudiants = etudiantContext.Etudiants.Find(etudiant.cne);
 
-            if (Request.Files.Count > 0 && Update == "Upload")
-            {
-                //Recupere le fichier est le sauvegarder dans /image/
-                HttpPostedFileBase file = Request.Files[0];
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                string extension = Path.GetExtension(file.FileName);
-                ViewBag.exte = extension;
-                if (fileName != "" && ImageEx.Contains(extension) == true)
-                {
-                    fileName = etudiants.nom + DateTime.Now.ToString("yymmssfff") + extension;
-                    etudiants.photo_link = fileName;
-                    fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
-                    file.SaveAs(fileName);
-                    etudiants.Modified = true;
-                    etudiantContext.SaveChanges();
-                    return View(etudiants);
+            return View();
 
-
-                }
-                else
-                {
-                    ViewBag.err = " vous devez selectionner une image";
-                    return View(etudiants);
-
-                }
-
-            }
-
-            else
-            {
-                ViewBag.err = null;
-
-                //si clicke sur les valider les modification 
-                etudiants.Modified = true;
-                etudiants.Choix = choix1 + choix2 + choix3;
-                etudiants.nationalite = etudiant.nationalite;
-                etudiants.email = etudiant.email;
-                etudiants.phone = etudiant.phone;
-                etudiants.address = etudiant.address;
-                etudiants.gsm = etudiant.gsm;
-                etudiants.address = etudiant.address;
-                etudiants.ville = etudiant.ville;
-                etudiants.dateNaiss = etudiant.dateNaiss;
-                etudiants.lieuNaiss = etudiant.lieuNaiss;
-                etudiantContext.SaveChanges();
-                return RedirectToAction("SendEmailToUser");
-
-            }
+            
         }
         //****************************************************************************************************************************
 
@@ -312,9 +267,9 @@ namespace projetASP.Controllers
             string subject = "Modification";
             ViewBag.nom = etudiants.nom;
             ViewBag.prenom = etudiants.prenom;
-            var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
+            var Resulta = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result !=null)
+            if (Resulta !=null)
             {
 
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());

@@ -4,21 +4,17 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using projetASP.Models;
 using ProjetASPCore.Context;
-using ProjetASPCore.Models;
 using ProjetASPCore.Services;
 using Rotativa.AspNetCore;
 using System;
-using System.Web.Http;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
 
 using System.Threading.Tasks;
 
-using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 
@@ -47,7 +43,7 @@ namespace projetASP.Controllers
                     if (db.Etudiants.ToList()[i].email != null)
                     {
                         string body = "<div border='2px black solid'><h1 color='red'>Bonjour Mr/Mme " + db.Etudiants.ToList()[i].nom + " " + db.Etudiants.ToList()[i].prenom + "</h1>" +
-                                                    "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
+                                                    "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.Etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
                                                     "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
                                                     "</div>";
                         var Result = SendEmailAsync(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
@@ -990,11 +986,7 @@ namespace projetASP.Controllers
             string[] vx = { "info", "indus", "gtr", "gpmc" };
             double[] vy = { infoP, indusP, gtrP, gpmcP };
 
-            System.Web.Helpers.Chart chart = new System.Web.Helpers.Chart(width: 900, height: 400, theme: ChartTheme.Blue);
-
-
-            chart.AddSeries(chartType: "Column", xValue: vx, yValues: vy);
-            chart.Write("png");
+     
             return null;
         }
         [HttpPost]
