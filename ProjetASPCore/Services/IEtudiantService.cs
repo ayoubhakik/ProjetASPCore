@@ -7,5 +7,6 @@ namespace ProjetASPCore.Services
 {
     interface IEtudiantService
     {
+        byte[] ExporterExcel();
     }
 }
