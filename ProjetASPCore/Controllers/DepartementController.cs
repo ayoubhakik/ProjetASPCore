@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using projetASP.Models;
+using ProjetASPCore.Models;
 using ProjetASPCore.Context;
 using ProjetASPCore.Services;
 using Rotativa.AspNetCore;

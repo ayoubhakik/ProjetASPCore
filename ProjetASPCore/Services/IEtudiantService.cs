@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Services
 {
-    interface IEtudiantService
-    {
+    interface IEtudiantService  {
     }
 }

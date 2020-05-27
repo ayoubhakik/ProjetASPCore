@@ -1,4 +1,4 @@
-﻿using projetASP.Models;
+﻿using ProjetASPCore.Models;
 using Rotativa;
 
 using System;
