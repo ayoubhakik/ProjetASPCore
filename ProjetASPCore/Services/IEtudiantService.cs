@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Services
 {
-    interface IEtudiantService
+    public interface IEtudiantService
     {
         byte[] ExporterExcel();
     }

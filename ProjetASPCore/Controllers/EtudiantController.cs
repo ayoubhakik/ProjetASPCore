@@ -38,7 +38,7 @@ namespace projetASP.Controllers
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
-        EtudiantController(IEtudiantService e, IDepartementService f)
+        public EtudiantController(IEtudiantService e, IDepartementService f)
         {
             this.departementService = f;
             this.etudiantService = e;
@@ -160,14 +160,11 @@ namespace projetASP.Controllers
 
 
         [HttpGet]
-
-
-
         public ActionResult Inscription()
         {
-            EtudiantContext db = new EtudiantContext();
-            ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
-            ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
+            //EtudiantContext db = new EtudiantContext();
+            //ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
+            //ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
             ViewBag.prenom = new SelectList(etudiantContext.Etudiants, "cne", "prenom");
             ViewBag.nom = new SelectList(etudiantContext.Etudiants, "cne", "nom");
 
@@ -187,14 +184,13 @@ namespace projetASP.Controllers
                 new SelectListItem {Text="Très bien", Value="4" },
             };
 
-
-            return View();
+            Etudiant student = new Etudiant();
+            return View(student);
         }
 
         [HttpPost]
         public ActionResult Inscription(Etudiant student, string choix1, string choix2, string choix3)
         {
-
             ViewBag.prenom = new SelectList(etudiantContext.Etudiants, "cne", "prenom");
             ViewBag.nom = new SelectList(etudiantContext.Etudiants, "cne", "nom");
             EtudiantContext db = new EtudiantContext();
