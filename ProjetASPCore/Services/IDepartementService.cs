@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Services
 {
-    interface IDepartementService
+    public interface IDepartementService
     {
 
     }
