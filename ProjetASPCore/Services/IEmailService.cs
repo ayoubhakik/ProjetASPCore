@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ProjetASPCore.Services
 {
-    interface IEmailService
+    public interface IEmailService
     {
 
         Task SendEmailAsync(string email,string subject, string message);
