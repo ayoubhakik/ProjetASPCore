@@ -19,7 +19,7 @@ namespace ProjetASPCore.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("projetASP.Models.Departement", b =>
+            modelBuilder.Entity("ProjetASPCore.Models.Departement", b =>
                 {
                     b.Property<int>("id_departement")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace ProjetASPCore.Migrations
                     b.ToTable("Departement");
                 });
 
-            modelBuilder.Entity("projetASP.Models.Etudiant", b =>
+            modelBuilder.Entity("ProjetASPCore.Models.Etudiant", b =>
                 {
                     b.Property<string>("cne")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace ProjetASPCore.Migrations
                     b.ToTable("Etudiants");
                 });
 
-            modelBuilder.Entity("projetASP.Models.Filiere", b =>
+            modelBuilder.Entity("ProjetASPCore.Models.Filiere", b =>
                 {
                     b.Property<int>("idFil")
                         .ValueGeneratedOnAdd()
@@ -120,7 +120,7 @@ namespace ProjetASPCore.Migrations
                     b.ToTable("Filieres");
                 });
 
-            modelBuilder.Entity("projetASP.Models.Settings", b =>
+            modelBuilder.Entity("ProjetASPCore.Models.Settings", b =>
                 {
                     b.Property<int>("idSettings")
                         .ValueGeneratedOnAdd()
@@ -141,9 +141,9 @@ namespace ProjetASPCore.Migrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("projetASP.Models.Etudiant", b =>
+            modelBuilder.Entity("ProjetASPCore.Models.Etudiant", b =>
                 {
-                    b.HasOne("projetASP.Models.Filiere", "Filiere")
+                    b.HasOne("ProjetASPCore.Models.Filiere", "Filiere")
                         .WithMany("Etudiants")
                         .HasForeignKey("idFil");
                 });

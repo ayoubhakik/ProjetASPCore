@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Session;
 
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Mvc;
-using ProjetASPCore.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ProjetASPCore.Services;
@@ -27,7 +26,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace projetASP.Controllers
+namespace ProjetASPCore.Controllers
 {
     
     public class EtudiantController : Controller
@@ -48,7 +47,7 @@ namespace projetASP.Controllers
 
         // GET: Etudiant
         EtudiantContext etudiantContext = new EtudiantContext();
-        private string[] ImageEx = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".svg" };
+        private readonly string[] ImageEx = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".svg" };
 
         public ActionResult Index()
         {

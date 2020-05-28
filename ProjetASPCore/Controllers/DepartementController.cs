@@ -18,71 +18,46 @@ using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 
-namespace projetASP.Controllers
+namespace ProjetASPCore.Controllers
 {
 
     public class DepartementController : Controller
     {
-        private readonly IEmailService _emailService;
+        
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
+        public DepartementController(IEtudiantService e, IDepartementService f)
+        {
+            etudiantService = e;
+            departementService = f;
+        }
 
         public ActionResult Index()
         {
             return View();
 
         }
+
+
+
         public void EnvoyerLesFilieres()
         {
 
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (db.Etudiants.ToList()[i].email != null)
-                    {
-                        string body = "<div border='2px black solid'><h1 color='red'>Bonjour Mr/Mme " + db.Etudiants.ToList()[i].nom + " " + db.Etudiants.ToList()[i].prenom + "</h1>" +
-                                                    "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.Etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
-                                                    "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
-                                                    "</div>";
-                        var Result = SendEmailAsync(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
-                        if (Result.AsyncState != null)
-                        {
-                            //Json(Result, JsonRequestBehavior.AllowGet);
-                        }
-                    }
-
-
-
-                }
+                departementService.EnvoyerLesFilieres();
             }
 
 
         }
 
-        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
-        {
-            await _emailService.SendEmailAsync(email, subject, message);
-            return Ok();
-        }
-
-        
 
         public ActionResult DeleteAllStudents()
         {
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    db.Etudiants.Remove(db.Etudiants.ToList()[i]);
-                }
-                db.Settings.First().Attributted = false;
-                db.Settings.First().importEtudiant = false;
-                db.Settings.First().importNote = false;
-                db.SaveChanges();
+                departementService.DeleteAllStudents();                
                 return RedirectToAction("Index");
             }
             else
@@ -94,79 +69,29 @@ namespace projetASP.Controllers
 
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
-                List<Etudiant> etudiant = new List<Etudiant>();
-                int count = 0;
-
-                foreach (var item in db.Etudiants.Distinct().ToArray())
-                {
-
-
-                    if (searchBy == "cne")
-                    {
-                        var etudiants = (from s in db.Etudiants
-                                         where s.cne == cne
-                                         select s).ToList();
-                        count++;
-                        etudiant = etudiants;
-
-
-
-                    }
-                    if (searchBy == "Name")
-                    {
-                        var etudiants = (from s in db.Etudiants
-                                         where s.nom == cne
-                                         select s).ToList();
-
-                        etudiant = etudiants;
-                        count++;
-                    }
-                    else if (searchBy == "cin")
-                    {
-
-                        var etudiants = (from s in db.Etudiants
-                                         where s.cin == cne
-                                         select s).ToList();
-                        count++;
-                        etudiant = etudiants;
-
-
-                    }
-                }
-
-
-                if (count == 0)
+                if (departementService.Search(searchBy,cne).Count == 0)
                 {
                     ViewBag.error = true;
                     return View();
+                    
                 }
                 ViewBag.error = false;
-                return View(etudiant);
+
+                return View(departementService.Search(searchBy,cne));
 
             }
             else
                 return RedirectToAction("Authentification", "User");
         }
+
+
         //suppression des etudiants importes mais pas les redoublants
         public ActionResult DeleteImportedStudents()
         {
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (db.Etudiants.ToList()[i].Redoubler == false)
-                    {
-                        db.Etudiants.Remove(db.Etudiants.ToList()[i]);
-                    }
-                }
 
-                db.Settings.First().Attributted = false;
-                db.Settings.First().importEtudiant = false;
-                db.Settings.First().importNote = false;
-
-                db.SaveChanges();
+                departementService.DeleteImportedStudents();
 
                 return RedirectToAction("Index");
             }
@@ -182,9 +107,7 @@ namespace projetASP.Controllers
             {
                 if (id != null)
                 {
-                    EtudiantContext db = new EtudiantContext();
-                    db.Etudiants.Find(id).Redoubler = true;
-                    db.SaveChanges();
+                    
                     ViewBag.Current = "Index";
 
                     return RedirectToAction("Index");
@@ -195,6 +118,9 @@ namespace projetASP.Controllers
             else
                 return RedirectToAction("Authentification", "User");
         }
+
+
+
         public ActionResult Corbeille()
         {
             if (UserValide.IsValid() && UserValide.IsAdmin())
@@ -204,7 +130,7 @@ namespace projetASP.Controllers
 
                 ViewBag.Current = "Corbeille";
 
-                return View(db.Etudiants.ToList());
+                return View(departementService.students());
             }
             else
                 return RedirectToAction("Authentification", "User");
@@ -216,6 +142,7 @@ namespace projetASP.Controllers
 
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
+                ///must be treated after
                 EtudiantContext db = new EtudiantContext();
                 ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
                 ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
@@ -236,19 +163,10 @@ namespace projetASP.Controllers
         {
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
+                departementService.Setting(dateNotification, dateAttribution);
+
+                ////must be treated after
                 EtudiantContext db = new EtudiantContext();
-
-
-                if (dateNotification != null)
-                {
-                    db.Settings.FirstOrDefault().DatedeRappel = dateNotification;
-                }
-                if (dateAttribution != null)
-                {
-                    db.Settings.FirstOrDefault().Delai = dateAttribution;
-                }
-
-                db.SaveChanges();
                 ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
                 ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
                 ViewBag.Current = "Setting";
@@ -265,13 +183,9 @@ namespace projetASP.Controllers
 
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
-
-
                 ViewBag.Current = "index";
-                List<Etudiant> list = db.Etudiants.ToList();
 
-                return View(list);
+                return View(departementService.students());
             }
             else
                 return RedirectToAction("Authentification", "User");
@@ -285,7 +199,7 @@ namespace projetASP.Controllers
             ViewBag.Current = "importerEtudiants";
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-
+                //must be treated after
                 EtudiantContext db = new EtudiantContext();
                 if (!db.Settings.FirstOrDefault().importEtudiant)
                 {
@@ -865,61 +779,15 @@ namespace projetASP.Controllers
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
                 //essayons de retourner tous les etudiants
-                EtudiantContext db = new EtudiantContext();
-                List<Etudiant> list = db.Etudiants.ToList();
-                int total = 0;
-                int reste = 0;
+                Dictionary<string, long> table=departementService.statistiques();
 
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (!db.Etudiants.ToList()[i].Redoubler)
-                    {
-                        total++;
-                    }
-                    if (!db.Etudiants.ToList()[i].Validated && !db.Etudiants.ToList()[i].Redoubler)
-                    {
-                        reste++;
-                    }
-                }
-                //initialiser les max
-                int maxInfo = total / 4;
-                int maxGtr = total / 4;
-                int maxIndus = total / 4;
-                int maxGpmc = total / 4;
-                int info = 0, indus = 0, gpmc = 0, gtr = 0;
-                int diff = total % 4;
+                ViewBag.nbrTotal = table["total"];
 
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (!db.Etudiants.ToList()[i].Redoubler && db.Etudiants.ToList()[i].Validated)
-                    {
-                        char[] chiffr = (list[i].Choix).ToCharArray();
-
-                        if (chiffr[0] == 'F')
-                        {
-                            info++;
-                        }
-                        if (chiffr[0] == 'P')
-                        {
-                            gpmc++;
-                        }
-                        if (chiffr[0] == 'T')
-                        {
-                            gtr++;
-                        }
-                        if (chiffr[0] == 'D')
-                        {
-                            indus++;
-                        }
-                    }
-                }
-                ViewBag.nbrTotal = total;
-
-                ViewBag.nbrReste = reste;
-                ViewBag.info = info;
-                ViewBag.gtr = gtr;
-                ViewBag.gpmc = gpmc;
-                ViewBag.indus = indus;
+                ViewBag.nbrReste = table["nbrRest"];
+                ViewBag.info = table["info"];
+                ViewBag.gtr = table["gtr"];
+                ViewBag.gpmc = table["gpmc"];
+                ViewBag.indus = table["indus"];
                 //les pourcentages
 
                 return View();
@@ -990,68 +858,22 @@ namespace projetASP.Controllers
      
             return null;
         }
+
+
         [HttpPost]
         public IActionResult ExtraireNonValide()
         {
-            EtudiantContext students = new EtudiantContext();
-
-            //Création de la page excel
-            ExcelPackage excel = new ExcelPackage();
-            ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("Sheet1");
-
-            //Style des noms de colonnes
-            worksheet.Row(1).Style.Font.Bold = true;
-            worksheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-            //Noms des colonnes
-            worksheet.Cells[1, 1].Value = "Nom";
-            worksheet.Cells[1, 2].Value = "Prenom";
-            worksheet.Cells[1, 3].Value = "CIN";
-            worksheet.Cells[1, 4].Value = "CNE";
-
-
-            //Remplissage des cellules
-            int rowIndex = 2;
-            foreach (var student in students.Etudiants.ToList())
-            {
-                if (!student.Validated)
-                {
-                    worksheet.Cells[rowIndex, 1].Value = student.nom;
-                    worksheet.Cells[rowIndex, 2].Value = student.prenom;
-                    worksheet.Cells[rowIndex, 3].Value = student.cin;
-                    worksheet.Cells[rowIndex, 4].Value = student.cne;
-                }
-
-
-                rowIndex++;
-
-
-            }
-
-            //Envoi du fichier dans par http
-            using (var memoryStream = new MemoryStream())
-            {
-                //Response.Clear();
-                //Response.ClearContent();
-                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                //Response.AddHeader("content-disposition", "attachment; filename=EtudiantNonValideCompte.xlsx");
-                //excel.SaveAs(memoryStream);
-                //memoryStream.WriteTo(Response.OutputStream);
-                //Response.Flush();
-                //Response.Clear();
-                //Response.End();
-                excel.SaveAs(memoryStream);
-                var content = memoryStream.ToArray();
-                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
-            }
+           
+                return File(departementService.ExtraireNonValide(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
+            
         }
 
         //Exporter toutes les informations des étudiants
         [HttpGet]
         public IActionResult ExportExcel()
         {
-           var content = etudiantService.ExporterExcel();
-           return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
+            return File(departementService.ExportExcel(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
+          
         }
 
         ///fonction pour les info
@@ -1059,76 +881,7 @@ namespace projetASP.Controllers
         public IActionResult ExportExcelAttributed()
         {
             //Données à exporter
-            EtudiantContext students = new EtudiantContext();
-
-            //Création de la page excel
-            ExcelPackage excel = new ExcelPackage();
-            ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("Sheet1");
-
-            //Style des noms de colonnes
-            worksheet.Row(1).Style.Font.Bold = true;
-            worksheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-            //Noms des colonnes
-            worksheet.Cells[1, 1].Value = "Nom";
-            worksheet.Cells[1, 2].Value = "Prenom";
-            worksheet.Cells[1, 3].Value = "CIN";
-            worksheet.Cells[1, 4].Value = "CNE";
-            worksheet.Cells[1, 5].Value = "Choix";
-            worksheet.Cells[1, 6].Value = "Filiere affectee";
-
-            //Remplissage des cellules
-            int rowIndex = 2;
-            foreach (var student in students.Etudiants.ToList())
-            {
-                worksheet.Cells[rowIndex, 1].Value = student.nom;
-                worksheet.Cells[rowIndex, 2].Value = student.prenom;
-                worksheet.Cells[rowIndex, 3].Value = student.cin;
-                worksheet.Cells[rowIndex, 4].Value = student.cne;
-
-                worksheet.Cells[rowIndex, 5].Value = student.choix;
-                if (student.idFil == 1)
-                {
-                    worksheet.Cells[rowIndex, 6].Value = "Info";
-
-                }
-
-                if (student.idFil == 2)
-                {
-                    worksheet.Cells[rowIndex, 6].Value = "GTR";
-
-                }
-                if (student.idFil == 3)
-                {
-                    worksheet.Cells[rowIndex, 6].Value = "Indus";
-
-                }
-                if (student.idFil == 4)
-                {
-                    worksheet.Cells[rowIndex, 6].Value = "GPMC";
-
-                }
-                rowIndex++;
-
-
-            }
-
-            //Envoi du fichier  par http
-            using (var memoryStream = new MemoryStream())
-            {
-                //Response.Clear();
-                //Response.ClearContent();
-                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                //Response.AddHeader("content-disposition", "attachment; filename=listeAttribution.xlsx");
-                //excel.SaveAs(memoryStream);
-                //memoryStream.WriteTo(Response.OutputStream);
-                //Response.Flush();
-                //Response.Clear();
-                //Response.End();
-                excel.SaveAs(memoryStream);
-                var content = memoryStream.ToArray();
-                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
-            }
+                return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
 
 
 
@@ -1140,9 +893,8 @@ namespace projetASP.Controllers
             ViewBag.Current = "visualiser";
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
 
-                return View(db.Etudiants.ToList());
+                return View(departementService.students());
             }
             else
                 return RedirectToAction("Authentification", "User");
@@ -1164,6 +916,10 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
             }
         }
+         
+         
+         
+         
 
     }
 }
