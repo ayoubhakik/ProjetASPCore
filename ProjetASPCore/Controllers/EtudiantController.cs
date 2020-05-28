@@ -25,7 +25,7 @@ using ProjetASPCore.Services;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace projetASP.Controllers
 {
@@ -37,11 +37,13 @@ namespace projetASP.Controllers
        
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
+        private readonly EtudiantContext _context;
 
-        public EtudiantController(IEtudiantService e, IDepartementService f)
+
+        public EtudiantController(EtudiantContext context)
         {
-            this.departementService = f;
-            this.etudiantService = e;
+            _context = context;
+         
         }
 
         // GET: Etudiant
@@ -50,24 +52,14 @@ namespace projetASP.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Current = "Home";
-           
-            if (UserValide.IsValid() && UserValide.IsStudent())
-            {
-
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Authentification1", "User");
-            }
+            return View();
 
         }
 
 
         //--------------------------------------------------------------------------------------------------------------------------
         //Modification 
-        public ActionResult Modification()
+        public async Task<IActionResult> Modification()
         {
             ViewBag.Current = "Modification";
             ViewBag.check = "Checked";
@@ -75,39 +67,57 @@ namespace projetASP.Controllers
              {
                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
              }*/
-
-
-
-
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var etudiant = await _context.Etudiants
+                           .Include(e => e.Filiere)
+                           .FirstOrDefaultAsync(m => m.cne == "1");
+            if (etudiant == null)
             {
-                Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
+                return NotFound();
+            }
 
-                return View(etudiants);
-            }
-            else
-            {
-                return RedirectToAction("Authentification1", "User");
-            }
+            return View(etudiant);
+           
+            
+           
 
         }
-
+        private bool EtudiantExists(string id)
+        {
+            return _context.Etudiants.Any(e => e.cne == id);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Modification(Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
+        public async Task<IActionResult> Modification([Bind("cne,nom,prenom,password,nationalite,cin,email,phone,gsm,address,ville,typeBac,anneeBac,noteBac,mentionBac,noteFstYear,noteSndYear,dateNaiss,lieuNaiss,photo_link,Choix,Validated,Modified,Redoubler,idFil")]Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
         {
-            ViewBag.Current = "Modification";
+            if (etudiant.cne==null)
+            {
+                return NotFound();
+            }
 
-            /*Update name of buttom if user click in Upload l image seule va etre modifie 
-             
-             */
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(etudiant);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EtudiantExists(etudiant.cne))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return View("Index");
+            }
+            ViewData["idFil"] = new SelectList(_context.Filieres, "idFil", "idFil", etudiant.idFil);
+            return View(etudiant);
 
-            Etudiant etudiants = etudiantContext.Etudiants.Find(etudiant.cne);
-
-            return View();
-
-            
         }
         //****************************************************************************************************************************
 
