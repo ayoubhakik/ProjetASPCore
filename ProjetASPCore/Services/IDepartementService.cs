@@ -20,7 +20,7 @@ namespace ProjetASPCore.Services
         void ImporterEtudiantExcel(IFormFile excelFile);
         List<Etudiant> students();
         void ImporterNoteExcel(IFormFile excelFile);
-        void AttributionFiliere(string infoMax, string indusMax, string gtrMax, string gpmcMax);
+        Boolean AttributionFiliere(string infoMax, string indusMax, string gtrMax, string gpmcMax);
         byte[] ExtraireNonValide();
         byte[] ExportExcel();
         byte[] ExportExcelAttributed();

@@ -212,7 +212,7 @@ namespace ProjetASPCore.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
-
+        //must be treated
         [HttpPost]
         public ActionResult ImporterEtudiantExcel(IFormFile  excelFile)
         {
@@ -298,6 +298,7 @@ namespace ProjetASPCore.Controllers
             else
                 return RedirectToAction("Authentification", "User");
         }
+        //must be treated
 
         [HttpPost]
         public ActionResult ImporterNoteExcel(IFormFile excelFile)
@@ -500,271 +501,9 @@ namespace ProjetASPCore.Controllers
             ViewBag.Current = "attributionFiliere";
             if (UserValide.IsValid() && UserValide.IsAdmin())
             {
-                EtudiantContext db = new EtudiantContext();
+                //EtudiantContext db = new EtudiantContext();
                 //return a  list sorted in a desendent way
-                List<Etudiant> list = db.Etudiants.ToList();
-
-                //calculer le nbr total sans les etudiants redoublants
-                int total = 0;
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (!db.Etudiants.ToList()[i].Redoubler)
-                    {
-                        total++;
-                    }
-                }
-                //initialiser les max
-                int maxInfo = total / 4;
-                int maxGtr = total / 4;
-                int maxIndus = total / 4;
-                int maxGpmc = total / 4;
-                int info = 0, indus = 0, gpmc = 0, gtr = 0;
-                int diff = total % 4;
-
-                for (int i = 0; i < db.Etudiants.ToList().Count; i++)
-                {
-                    if (!db.Etudiants.ToList()[i].Redoubler && db.Etudiants.ToList()[i].Validated)
-                    {
-                        char[] chiffr = (list[i].Choix).ToCharArray();
-
-                        if (chiffr[0] == 'F')
-                        {
-                            info++;
-                        }
-                        if (chiffr[0] == 'P')
-                        {
-                            gpmc++;
-                        }
-                        if (chiffr[0] == 'T')
-                        {
-                            gtr++;
-                        }
-                        if (chiffr[0] == 'D')
-                        {
-                            indus++;
-                        }
-                    }
-                }
-
-                //diviser le diff partout
-                Dictionary<string, int> dr = new Dictionary<string, int>();
-                dr.Add("info", info);
-                dr.Add("gpmc", gpmc);
-                dr.Add("gtr", gtr);
-                dr.Add("indus", indus);
-
-                //creer une copie de dictionnaire
-                Dictionary<string, int> copyDr = new Dictionary<string, int>();
-
-                for (int i = 0; i < dr.Count; i++)
-                {
-                    copyDr.Add(dr.ElementAt(i).Key, dr.ElementAt(i).Value);
-                }
-                int index1 = 0;
-                while (index1 < diff && diff != 0)
-                {
-                    switch (copyDr.FirstOrDefault(x => x.Value == copyDr.Values.Max()).Key)
-                    {
-                        case "info":
-                            maxInfo++;
-                            index1++;
-                            copyDr.Remove("info"); break;
-                        case "indus":
-                            maxIndus++;
-                            index1++;
-                            copyDr.Remove("indus"); break;
-                        case "gpmc":
-                            maxGtr++;
-                            index1++;
-                            copyDr.Remove("gpmc"); break;
-                        case "gtr":
-                            maxGpmc++;
-                            index1++;
-                            copyDr.Remove("gtr"); break;
-                    }
-
-                }
-                copyDr.Clear();
-                for (int i = 0; i < dr.Count; i++)
-                {
-                    copyDr.Add(dr.ElementAt(i).Key, dr.ElementAt(i).Value);
-                }
-                //changer les maxs si la departement a saisi des valeurs
-                if (infoMax != null && indusMax != null && gpmcMax != null && gtrMax != null)
-                {
-                    try
-                    {
-
-                        maxInfo = Convert.ToInt32(infoMax);
-                        maxIndus = Convert.ToInt32(indusMax);
-                        maxGtr = Convert.ToInt32(gtrMax);
-                        maxGpmc = Convert.ToInt32(gpmcMax);
-                        if (maxInfo + maxIndus + maxGtr + maxGpmc != total)
-                        {
-                            ViewBag.error2 = true;
-                            return View();
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-
-                    }
-
-                }
-
-                int indexInfo = 0;
-                int indexGtr = 0;
-                int indexIndus = 0;
-                int indexGpmc = 0;
-                for (int i = 0; i < list.Count; i++)
-                {
-
-                    //verification de l'etudiant si deja a choisi une filiere sinon on va lui attribuer la derniere filiere (gpmc->indus->gtr->info)
-                    if (!list[i].Redoubler)
-                    {
-                        if (list[i].Validated)
-                        {
-                            //parse to a table of chars
-                            char[] choice = list[i].Choix.ToCharArray();
-                            //verify the frst case which is if we have F=info
-                            Boolean choosen = false;
-
-                            for (int j = 0; j < 3; j++)
-                            {
-
-                                if (choice[j] == 'F')
-                                {
-                                    if (indexInfo < maxInfo)
-                                    {
-                                        list[i].idFil = 1;
-                                        choosen = true;
-                                        indexInfo++; break;
-                                    }
-                                }
-                                if (choice[j] == 'T')
-                                {
-                                    if (indexGtr < maxGtr)
-                                    {
-                                        list[i].idFil = 2;
-                                        choosen = true;
-
-                                        indexGtr++; break;
-                                    }
-                                }
-                                if (choice[j] == 'D')
-                                {
-                                    if (indexIndus < maxIndus)
-                                    {
-                                        list[i].idFil = 3;
-                                        choosen = true;
-
-                                        indexIndus++; break;
-                                    }
-
-                                }
-                                if (choice[j] == 'P')
-                                {
-                                    if (indexGpmc < maxGpmc)
-                                    {
-                                        list[i].idFil = 4;
-                                        choosen = true;
-                                        indexGpmc++; break;
-                                    }
-                                }
-                                //si l'etudiant est plac'e dans une filiere en va sortir de la boucle
-                                if (choosen)
-                                {
-                                    j = 3;
-                                }
-                                //si l'etudiant n'est pas place dans une filiere alors (trois filiere qu il a choisi sont pleins), il va prendre une place dans la filiere disponible
-                                if (!choosen && j == 2)
-                                {
-                                    if (indexInfo < maxInfo)
-                                    {
-                                        list[i].idFil = 1;
-                                        choosen = true;
-                                        indexInfo++; break;
-                                    }
-                                    if (indexGtr < maxGtr)
-                                    {
-                                        list[i].idFil = 2;
-                                        choosen = true;
-                                        indexGtr++; break;
-                                    }
-                                    if (indexIndus < maxIndus)
-                                    {
-                                        list[i].idFil = 3;
-                                        choosen = true;
-                                        indexIndus++; break;
-                                    }
-                                    if (indexGpmc < maxGpmc)
-                                    {
-                                        list[i].idFil = 4;
-                                        choosen = true;
-                                        indexGpmc++; break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            copyDr.Clear();
-                            for (int j = 0; j < dr.Count; j++)
-                            {
-                                copyDr.Add(dr.ElementAt(j).Key, dr.ElementAt(j).Value);
-                            }
-                            Boolean choosen = false;
-                            while (!choosen)
-                            {
-                                switch (copyDr.FirstOrDefault(x => x.Value == copyDr.Values.Max()).Key)
-                                {
-                                    case "info":
-                                        if (indexInfo < maxInfo)
-                                        {
-                                            list[i].idFil = 1;
-                                            choosen = true;
-                                            indexInfo++;
-                                        }
-                                        copyDr.Remove("info");
-                                        break;
-                                    case "gtr":
-                                        if (indexGtr < maxGtr)
-                                        {
-                                            list[i].idFil = 2;
-                                            choosen = true;
-                                            indexGtr++;
-                                        }
-                                        copyDr.Remove("gtr");
-                                        break;
-                                    case "indus":
-                                        if (indexIndus < maxIndus)
-                                        {
-                                            list[i].idFil = 3;
-                                            choosen = true;
-                                            indexIndus++;
-                                        }
-                                        copyDr.Remove("indus");
-                                        break;
-                                    case "gpmc":
-                                        if (indexGpmc < maxGpmc)
-                                        {
-                                            list[i].idFil = 4;
-                                            choosen = true;
-                                            indexGpmc++;
-                                        }
-                                        copyDr.Remove("gpmc");
-                                        break;
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                db.Settings.First().Attributted = true;
-                //envoi d'un msg qui contient la filiere attribuer pour  chaque etudiant
-                db.SaveChanges();
+                ViewBag.error2 = departementService.AttributionFiliere(infoMax, indusMax, gtrMax, gpmcMax);
                 EnvoyerLesFilieres();
                 return RedirectToAction("AttributionFiliere");
             }
@@ -882,9 +621,6 @@ namespace ProjetASPCore.Controllers
         {
             //Données à exporter
                 return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
-
-
-
         }
 
 
