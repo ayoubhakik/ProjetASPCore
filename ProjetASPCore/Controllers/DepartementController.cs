@@ -29,8 +29,14 @@ namespace ProjetASPCore.Controllers
 
         public DepartementController(IEtudiantService e, IDepartementService f)
         {
-            this.departementService = f;
-            this.etudiantService = e;
+            etudiantService = e;
+            departementService = f;
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+
         }
 
 
@@ -172,7 +178,7 @@ namespace ProjetASPCore.Controllers
 
 
         }
-        public ActionResult Index()
+        public ActionResult Indexww()
         {
 
             if (UserValide.IsValid() && UserValide.IsAdmin())
@@ -861,15 +867,13 @@ namespace ProjetASPCore.Controllers
                 return File(departementService.ExtraireNonValide(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
             
         }
+
+        //Exporter toutes les informations des étudiants
         [HttpGet]
         public IActionResult ExportExcel()
         {
-            
-                return File(departementService.ExportExcel(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
-           
-
-
-
+            return File(departementService.ExportExcel(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
+          
         }
 
         ///fonction pour les info

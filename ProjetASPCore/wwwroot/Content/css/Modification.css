@@ -1,0 +1,93 @@
+﻿body {
+    
+    
+    font-family: Raleway, Open Sans, Droid Sans, Roboto,arial, sans-serif;
+}
+
+.card {
+    background-image: url("../img/index.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    /*filter: Alpha(opacity=84);
+    -moz-opacity: 0.84;
+    opacity: 0.84;*/
+    border-radius: 30px;
+}
+#header_5 {
+   
+    text-align:center;
+    color: black;
+    font-weight: bold;
+}
+#subHeader_5 {
+    color: white;
+    font-weight: bold;
+    position: relative;
+    bottom: 100px;
+    left: 300px;
+    font-size: 16px;
+}
+.Ed{
+    visibility:hidden;
+}
+.Ed:target{
+    visibility:visible;
+}
+#mod {
+    background-color: #B49082;
+    color: black;
+    border-radius: 10px;
+}
+img{
+    border-radius:20px;
+   position:relative;
+   
+}
+#cid_3 {
+    color:lightgray;
+}
+.form-input-wide {
+    color: lightgray;
+}
+
+.form-label, form-label-auto {
+    color: #f1b4b4;
+    font-weight: bold;
+    
+    width: 250px;
+}
+.form-control {
+    color: white;
+}
+.form-matrix-row-headers {
+    color: white;
+}
+.form-matrix-column-headers, .form-matrix-values, .form-matrix-row-headers {
+    background-color: transparent !important;
+    border-color: transparent !important;
+   position:relative;
+   top:10px;
+}
+
+label {
+    color: white;
+    position: relative;
+    top: 4px;
+}
+.form-control {
+    color: white !important;
+}
+#input_2 {
+    border-radius: 20px;
+    width: 200px;
+    background: transparent !important;
+    font-weight: bold !important;
+    color: white !important;
+    font-size:20px;
+}
+    #input_2:hover {
+        background: #B49082 !important;
+
+        border-color: #B49082 !important;
+    }
+ 
