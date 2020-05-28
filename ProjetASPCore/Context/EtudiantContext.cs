@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using projetASP.Models;
+using ProjetASPCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace ProjetASPCore.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer
-                ("Server=DESKTOP-MMNT686;Database=ProjetASPCore;Trusted_Connection=True;");
+                ("Server=YURI205B\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
         }
     }
 }

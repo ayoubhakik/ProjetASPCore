@@ -18,12 +18,13 @@ using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 
-namespace projetASP.Controllers
+namespace ProjetASPCore.Controllers
 {
 
     public class DepartementController : Controller
     {
-        private readonly IEmailService _emailService;
+        
+         private readonly IEmailService _emailService;
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
@@ -1281,6 +1282,10 @@ namespace projetASP.Controllers
                 return RedirectToAction("Authentification", "User");
             }
         }
+         
+         
+         
+         
 
     }
 }

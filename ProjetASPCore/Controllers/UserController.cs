@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetASPCore.Models;
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Session;
-using projetASP.Models;
 
 namespace ProjetASPCore.Controllers
 {
