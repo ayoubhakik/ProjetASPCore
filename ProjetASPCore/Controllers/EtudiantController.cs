@@ -34,16 +34,20 @@ namespace ProjetASPCore.Controllers
 
         private readonly IEmailService _emailService;
        
-        private readonly IEtudiantService etudiantService;
-        private readonly IDepartementService departementService;
+        private readonly IEtudiantService _etudiantService;
+        private readonly IDepartementService _departementService;
         private readonly EtudiantContext _context;
 
 
-        public EtudiantController(EtudiantContext context)
+        public EtudiantController(EtudiantContext context, IEmailService emailService, IEtudiantService etudiantService, IDepartementService departementService )
         {
             _context = context;
+            _emailService = emailService;
+            _etudiantService = etudiantService;
+            _departementService = departementService;
          
         }
+
 
         // GET: Etudiant
         EtudiantContext etudiantContext = new EtudiantContext();
@@ -193,13 +197,14 @@ namespace ProjetASPCore.Controllers
                 new SelectListItem {Text="Très bien", Value="4" },
             };
 
-            Etudiant student = new Etudiant();
-            return View(student);
+            Etudiant plain = new Etudiant();
+            return View(plain);
         }
 
         [HttpPost]
         public ActionResult Inscription(Etudiant student, string choix1, string choix2, string choix3)
         {
+            Etudiant plain = new Etudiant();
             ViewBag.prenom = new SelectList(etudiantContext.Etudiants, "cne", "prenom");
             ViewBag.nom = new SelectList(etudiantContext.Etudiants, "cne", "nom");
             EtudiantContext db = new EtudiantContext();
@@ -228,12 +233,12 @@ namespace ProjetASPCore.Controllers
                 if (e == null)
                 {
                     ViewBag.message = "Les informations que vous avez entrez ne correspondent à aucun étudiant !";
-                    return View();
+                    return View(plain);
                 }
                 else if (e.Validated == true)
                 {
                     ViewBag.message = "Cet étudiant est déjà inscrit.";
-                    return View();
+                    return View(plain);
                 }
                 else
                 {
@@ -253,12 +258,10 @@ namespace ProjetASPCore.Controllers
                     e.lieuNaiss = student.lieuNaiss;
                     e.Choix = choix1 + choix2 + choix3;
                     etudiantContext.SaveChanges();
-
                     return RedirectToAction("SendEmailToUser1", new { email = e.email.ToString(), nom = e.nom.ToString(), prenom = e.prenom.ToString() });
                 }
             }
-
-            else return View();
+            else return View(plain);
         }
 
 
