@@ -27,10 +27,11 @@ namespace projetASP.Controllers
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
 
-         DepartementController(IEtudiantService e, IDepartementService f)
+
+        public ActionResult Index()
         {
-            this.departementService = f;
-            this.etudiantService = e;
+            return View();
+
         }
         public void EnvoyerLesFilieres()
         {
@@ -259,7 +260,7 @@ namespace projetASP.Controllers
 
 
         }
-        public ActionResult Index()
+        public ActionResult Indexww()
         {
 
             if (UserValide.IsValid() && UserValide.IsAdmin())

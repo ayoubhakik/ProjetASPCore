@@ -1,0 +1,306 @@
+﻿input {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    width: 100%;
+    height: 80px;
+    position: relative;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 18px;
+    color: #11273F;
+}
+
+    input::placeholder {
+        color: white;
+        opacity: 0.5;
+    }
+
+[placeholder] {
+    opacity: .9;
+}
+
+input:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+form input:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.text1 {
+    font-family: Montserrat-Regular;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #11273F;
+}
+
+.label-checkbox100 {
+    font-family: Poppins-Regular;
+    font-size: 13px;
+    color: #11273F;
+    line-height: 1.4;
+    display: block;
+    position: relative;
+    padding-left: 20px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+a {
+    color: #11273F;
+    outline: 0;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bolder;
+}
+
+    a:focus,
+    a:hover {
+        text-decoration: underline;
+    }
+
+p {
+    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
+    margin-top: 24px;
+    margin-top: 1.5rem;
+    color: #11273F;
+    font-size: 15px;
+}
+
+.fb-btn {
+    border: 2px solid #d3dae9;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: 'Open Sans', Helvetica;
+    border: 1px solid #11273F;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+    color: #11273F;
+    text-transform: uppercase;
+}
+
+    .fb-btn span {
+        font-weight: bolder;
+        color: #11273F;
+    }
+
+.text--center {
+    text-align: center;
+}
+
+
+
+li a p {
+    color: white;
+}
+/*Carousel*/
+.lien {
+    display: none;
+   
+}
+
+
+#subnav {
+    position: fixed;
+    top: 50%;
+    left:120px;
+    z-index: 88;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    transform: rotate(-90deg);
+}
+
+    #subnav > a {
+        display: inline-block;
+        margin: 0 30px;
+        padding: 15px 0;
+        color: black;
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        overflow: hidden;
+        position: relative;
+    }
+        
+        #subnav > a:after {
+            display: block;
+            content: '';
+            width: 0%;
+            height: 3px;
+            background: #eee;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: 0.5s all;
+            width: 0;
+            left: 100%;
+        }
+
+        #subnav > a:hover:after,
+        #subnav > a.active:after {
+            transition: 0.5s width;
+            width: 100%;
+            left: 0;
+            color:transparent;
+        }
+
+#caroussel {
+    position: static;
+}
+
+    #caroussel li {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        transition: 1s;
+        background-size: cover !important;
+    }
+
+        #caroussel li.active {
+            opacity: 0.75;
+
+        }
+       
+
+.nav1 {
+    position: fixed;
+    top: 50%;
+    right: 40px;
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    border: 3px solid #ccc;
+    transition: .5s;
+
+}
+
+    .nav1:after {
+        content: ' ';
+        display: block;
+        position: relative;
+        height: 8px;
+        width: 8px;
+        top: 20px;
+        transform: rotate(45deg);
+    }
+
+#next {
+    margin-top: -40px;
+}
+
+    #next:after {
+        border-top: 3px solid #ccc;
+        border-right: 3px solid #ccc;
+        left: 18px;
+    }
+
+#prev {
+    margin-top: 40px;
+}
+
+    #prev:after {
+        border-left: 3px solid #ccc;
+        border-bottom: 3px solid #ccc;
+        left: 22px;
+    }
+/*text*/
+h2 {
+    font-weight: 300;
+    font-size: 35px;
+    color: white;
+}
+h1 {
+    font-size: 56px;
+    font-weight: 600;
+    margin: 5px 0 20px;
+    word-spacing: 3px;
+    color: white;
+}
+h4 {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 36px;
+    color: white;
+}
+
+#caroussel li.active h1 {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+    animation-delay: 0.3s;
+}
+#caroussel li.active h2 {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+    animation-delay: 0.3s;
+}
+#caroussel li.active h4 {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+    animation-delay: 0.3s;
+}
+.line {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    left: 30px;
+    top: 30px;
+    position: absolute;
+    border: 9px solid #fff;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+    animation-delay: 0.3s;
+}
+.header-content {
+    position: relative;
+    padding: 56px;
+    overflow: hidden;
+}
+.cover {
+    padding: 75px 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+}
+    #caroussel li.active .line {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-name: fadeInLeft;
+    animation-delay: 0.3s;
+}
