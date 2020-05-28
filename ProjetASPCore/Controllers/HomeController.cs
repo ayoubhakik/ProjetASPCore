@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using Microsoft.AspNetCore.Mvc;
-using projetASP.Models;
 using ProjetASPCore.Models;
 
 namespace ProjetASPCore.Controllers
