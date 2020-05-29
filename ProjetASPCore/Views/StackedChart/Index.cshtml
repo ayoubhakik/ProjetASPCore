@@ -1,0 +1,63 @@
+﻿<title>@ViewData["Title"] - DemoGoogleChart</title>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<div id="chart_div"></div>
+<script type="text/javascript">
+
+
+    google.charts.load('current', {
+        packages: ['corechart', 'bar']
+    });
+    google.charts.setOnLoadCallback(LoadData);
+
+    function LoadData() {
+        $.ajax({
+
+            url: 'StackedChart/PopulationChart',
+            dataType: "json",
+            type: "GET",
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                toastr.error(err.message);
+            },
+            success: function(data) {
+                PopulationChart(data);
+                return false;
+            }
+        });
+        return false;
+    }
+
+    function PopulationChart(data) {
+        var dataArray = [
+            ['Filiere', 'Nombre des Etudiants']
+        ];
+        $.each(data, function(i, item) {
+            dataArray.push([item.Filiere, item.nbr_stud]);
+        });
+        var data = google.visualization.arrayToDataTable(dataArray);
+        var options = {
+            title: 'POURCENTEGE DE CHOIX DES ETUDIANTS POUR CHAQUE FILIERE ',
+
+            is3D: true,
+            isStacked: true,
+
+            chartArea: {
+                width: '50%'
+            },
+            colors: ['#b0120a'],
+            hAxis: {
+                title: 'FILIERE',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'POURCENTAGE DES ETUDIENTS'
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+        return false;
+    }
+</script>
+

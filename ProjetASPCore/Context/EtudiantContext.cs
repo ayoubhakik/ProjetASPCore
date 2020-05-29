@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using projetASP.Models;
+using ProjetASPCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

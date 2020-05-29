@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Models
 {
-    public class ListChart
+    public class ListStatic
     {
-        public static List<ChartModel> GetInfoList()
+        public static List<StaticModel> GetCityPopulationList()
         {
             EtudiantContext db = new EtudiantContext();
             List<Etudiant> list = db.Etudiants.ToList();
@@ -61,18 +61,17 @@ namespace ProjetASPCore.Models
             double infoP = Convert.ToDouble(info) / Convert.ToDouble(nbrTotal) * 100;
             double gtrP = Convert.ToDouble(gtr) / Convert.ToDouble(nbrTotal) * 100;
             double gpmcP = Convert.ToDouble(gpmc) / Convert.ToDouble(nbrTotal) * 100;
-            double indusP = Convert.ToDouble(indus) / Convert.ToDouble(nbrTotal) * 100;
+            double indusP = Convert.ToDouble(indus) / Convert.ToDouble(nbrTotal) * 100; 
 
-            var list1 = new List<ChartModel>();
-            list1.Add(new ChartModel { X = "info", Y = infoP });
-            list1.Add(new ChartModel { X = "gtr", Y = gtrP });
-            list1.Add(new ChartModel { X = "gpmc", Y = gpmcP });
-            list1.Add(new ChartModel { X = "indus", Y = indusP });
-
-
+            var list1 = new List<StaticModel>();
+          
+            list1.Add(new StaticModel {Filiere = "Info", nbr_stud = infoP });
+            list1.Add(new StaticModel { Filiere = "GTR", nbr_stud = gtrP});
+            list1.Add(new StaticModel { Filiere = "GPMC", nbr_stud = gpmcP });
+            list1.Add(new StaticModel { Filiere = "Indus", nbr_stud = indusP});
+           
 
             return list1;
-
 
         }
     }

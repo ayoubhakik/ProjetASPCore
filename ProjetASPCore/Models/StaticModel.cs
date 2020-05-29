@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace ProjetASPCore.Models
 {
-    public class ChartModel
+    public class StaticModel
     {
-        public string Filiere { get; set; }
+        public string Filiere{ get; set; }
         public double nbr_stud { get; set; }
+      
+
     }
 }
