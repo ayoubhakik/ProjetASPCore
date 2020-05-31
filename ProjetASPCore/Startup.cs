@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjetASPCore.Context;
 using ProjetASPCore.Services;
+using Rotativa.AspNetCore;
 
 namespace ProjetASPCore
 {
@@ -71,6 +72,8 @@ namespace ProjetASPCore
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            RotativaConfiguration.Setup(env);
         }
     }
 }

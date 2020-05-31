@@ -18,6 +18,7 @@ namespace ProjetASPCore.Context
         {
             optionsBuilder.UseSqlServer
                 ("Server=LAPTOP-PDHSS6RI\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
+
         }
     }
 }
