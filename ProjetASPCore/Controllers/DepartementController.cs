@@ -43,7 +43,7 @@ namespace ProjetASPCore.Controllers
 
             if (h != null && h1.Equals("Departement"))
             {
-                return View();
+                return View(departementService.students());
             }
             else
             {
@@ -214,25 +214,7 @@ namespace ProjetASPCore.Controllers
 
 
         }
-        public ActionResult Indexww()
-        {
-
-            var h = HttpContext.Session.GetInt32("userId");
-            var h1 = HttpContext.Session.GetString("role");
-
-            if (h != null && h1.Equals("Departement"))
-            {
-                ViewBag.Current = "index";
-
-                return View(departementService.students());
-            }
-            else
-                return RedirectToAction("Authentification", "User");
-
-
-
-        }
-
+        
         public ActionResult ImporterEtudiants()
         {
             ViewBag.Current = "importerEtudiants";

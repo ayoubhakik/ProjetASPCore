@@ -2,3 +2,100 @@
 @{
     Layout = "~/Views/Shared/_DepartementLayout.cshtml";
 }
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-header " style="background:linear-gradient(to bottom, #B49082, #B49290, #544E61);">
+                        <h2 class="card-title">Resultat de Recherche</h2>
+                    </div>
+                    <div class="card-body table-responsive">
+
+
+
+                        <table class="table table-hover">
+                            @if (ViewBag.error)
+                            {
+                                <tr><center>Etudiant not found</center></tr>
+                            }
+                            else
+                            {
+                                <thead style="color: #061323">
+                                <th style="font-weight:bold">Cne</th>
+                                <th style="font-weight:bold">Cin</th>
+                                <th style="font-weight:bold">Nom</th>
+                                <th style="font-weight:bold">Prenom</th>
+                                <th style="font-weight:bold">Choix</th>
+                                <th style="font-weight:bold">Note premiere annee</th>
+                                <th style="font-weight:bold">Note deuxieme annee</th>
+                                <th style="font-weight:bold">Note generale</th>
+
+                                <th style="font-weight:bold">valide ?</th>
+                                </thead>
+                                <tbody>
+                                    @if (Model == null)
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.cne)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.cin)
+                                                </th>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.nom)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.prenom)
+                                                </td>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.Choix)
+                                                </th>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.noteFstYear)
+                                                </td>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.noteSndYear)
+                                                </th>
+                                                <th>
+                                                    @(item.noteSndYear + item.noteFstYear) / 2)
+                                                </th>
+                                                <td>
+                                                    @if (item.Validated)
+                                                    {
+                                                        <span>Oui</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Non</span>
+                                                    }
+
+                                                </td>
+
+
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="text-align:center;background-color:rgba(0,0,0,1);">Copyright © 2020 ENSA. All Rights Reserved.</div>

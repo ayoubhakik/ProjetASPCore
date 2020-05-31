@@ -4,3 +4,256 @@
     Layout = "~/Views/Shared/_DepartementLayout.cshtml";
 }
 
+<style>
+    .card-header {
+        text-align: center;
+    }
+
+    .lefter {
+        float: left;
+    }
+
+    .righter {
+        float: right;
+        margin-left: 30px;
+    }
+
+    .clearer {
+        clear: both;
+    }
+
+    .lefter > table > tr > td > span {
+        color: black;
+    }
+
+    input {
+        border-radius: 5px 5px;
+        padding: 10px;
+    }
+
+    .button {
+        width: 60px;
+        height: 60px;
+        color: silver;
+        border: 3px solid silver;
+        border-radius: 60px;
+        box-shadow: 0 0 10px 1px black;
+        position: fixed;
+        bottom: 5%;
+        left: 56.2%;
+        margin-left: -30px;
+        transition: all 0.5s ease;
+    }
+
+        .button a {
+            display: block;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: silver;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 35.2941176471px;
+            padding-top: 10px;
+        }
+
+            .button a:hover {
+                color: black;
+            }
+</style>
+
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h2 style="margin-right:60px;">
+    <center style="color:black">
+        <i class="material-icons">touch_app</i>
+        Attribution des Filiere
+    </center>
+    <br />
+</h2>
+
+@using (Html.BeginForm("AttributionFiliere", "Departement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="lefter" style="margin-left:20px;padding:10px;">
+        <h4 style="color:black !important">l'ensemble des nombres ne doit pas deppaser : @ViewBag.total</h4>
+        <table style="color:black !important;" class="table table-curved">
+            <tr>
+                <td><span>Genie info  </span></td>
+                <td>:</td>
+                <td><input type="text" name="infoMax" value="@ViewBag.info" /></td>
+            </tr>
+            <tr>
+                <td><span>Genie Indus</span></td>
+                <td>:</td>
+                <td><input type="text" name="indusMax" value="@ViewBag.indus" /></td>
+            </tr>
+            <tr>
+                <td><span>Genie Telecomme </span></td>
+                <td>:</td>
+                <td><input type="text" name="gtrMax" value="@ViewBag.gtr" /></td>
+            </tr>
+            <tr>
+                <td><span>Genie Proc</span></td>
+                <td>:</td>
+                <td><input type="text" name="gpmcMax" value="@ViewBag.gpmc" /></td>
+            </tr>
+        </table>
+        @if (ViewBag.error2 != null)
+        {
+            <h4 style="color:red !important">vous devez donner des informations corrects</h4>
+        }
+
+    </div>
+    <div class="righter" style="position:relative;top:100px;right:20px;">
+        <center>
+            <p style="color: #061323;">
+                Une fois la departement clique sur cette button, chaque etudiant va avoir la filiere qui il merite.<br />
+                Notons bien que apres avoir attribuer les filieres aucun etudiant peut s'authentifier
+            </p><br />
+            @if (ViewBag.err != null)
+            {
+                <div class="btn" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);"><a style="text-decoration:none;color:white" href='#'>Attribuer</a></div>
+            }
+            else
+            {
+                <input class="btn" value="Attribuer" type="submit" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);" />
+            }
+        </center>
+    </div>
+    <div class="clearer"></div>
+
+    <div class="button">
+        <a href="#2" data-js-hook="link">
+            <i id="icon" class="fa fa-chevron-down"></i>
+        </a>
+    </div>
+
+}
+
+
+<br />
+
+<div class="content" id="2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+
+                    <div class="card-header" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);">
+                        <h4 class="card-title" style="color:white;">Resultat d'attribution</h4><span style="text-align:right"><a href='@Url.Action("ExportExcelAttributed","Departement")' style="color:antiquewhite">Telecharger la resultat</a></span>
+                    </div>
+                    <div class="card-body table-responsive">
+
+
+
+                        <table class="table table-hover">
+                            <thead style="color:#B49082;">
+                            <th style="font-weight:bold;">Cne</th>
+                            <th style="font-weight:bold;">Cin</th>
+                            <th style="font-weight:bold;">Nom</th>
+                            <th style="font-weight:bold;">Prenom</th>
+                            <th style="font-weight:bold;">Choix</th>
+                            <th style="font-weight:bold;">Filiere Attribue</th>
+
+
+                            </thead>
+                            <tbody>
+                                @if (Model == null)
+                                {
+
+                                }
+                                else
+                                {
+
+                                    foreach (var item in Model)
+                                    {
+                                        if (!item.Redoubler)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.cne)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.cin)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.nom)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.prenom)
+                                                </td>
+
+                                                <td>
+                                                    @if (item.Validated)
+                                                    {
+                                                        <span>@item.Choix</span>
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    @if (item.idFil == 1)
+                                                    {
+                                                        <span>Info</span>
+                                                    }
+                                                    @if (item.idFil == 2)
+                                                    {
+                                                        <span>Gtr</span>
+                                                    }
+                                                    @if (item.idFil == 3)
+                                                    {
+                                                        <span>Indus</span>
+                                                    }
+                                                    @if (item.idFil == 4)
+                                                    {
+                                                        <span>GPMC</span>
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    }
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="container-fluid" style="text-align:center;background-color:rgba(0,0,0,1);">Copyright © 2020 ENSA. All Rights Reserved.</div>
+    <script src="~/Content/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Content/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/js/main1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/libs.min.js"></script>
+    <script>
+    $(".button").click(function () {
+        $(".button").hide()
+    });
+    </script>
+    </script>
