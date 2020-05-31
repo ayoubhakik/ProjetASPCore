@@ -26,14 +26,13 @@ namespace ProjetASPCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-<<<<<<< HEAD
-          
-=======
             services.AddSession(options =>
-          {
-              options.IdleTimeout = TimeSpan.FromSeconds(1800);
-          });
->>>>>>> hasnae-dev
+            {
+
+                options.IdleTimeout = TimeSpan.FromSeconds(9000);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -41,7 +40,7 @@ namespace ProjetASPCore
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddTransient<IEmailService,EmailService>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<EtudiantContext>();
             services.AddSingleton<IEtudiantService, EtudiantService>();

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using ProjetASPCore.Models;
 
@@ -12,6 +11,8 @@ namespace ProjetASPCore.Controllers
     {
         public IActionResult Index()
         {
+           
+            ViewBag.smth = "smth";
             return View();
         }
 
@@ -29,6 +30,7 @@ namespace ProjetASPCore.Controllers
             return View();
         }
 
+       
         public IActionResult Privacy()
         {
             return View();

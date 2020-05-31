@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace projetASP.Models
+namespace ProjetASPCore.Models
 {
     public class UserValide
     {
@@ -37,7 +37,7 @@ namespace projetASP.Models
         }
         public static bool IsStudent()
         {
-       
+
             if (_session.GetString("role").Equals("Etudiant"))
             {
                 return true;

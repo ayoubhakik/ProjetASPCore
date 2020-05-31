@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
 using projetASP.Models;
+=======
+>>>>>>> 129e30b41eb1e00bd71aab1cebbe0a35365090d9
 using ProjetASPCore.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +21,7 @@ namespace ProjetASPCore.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer
-                ("Server=YURI205B\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
+                ("Server=LAPTOP-PDHSS6RI\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
         }
     }
 }

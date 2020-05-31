@@ -1,4 +1,4 @@
-﻿using projetASP.Models;
+﻿using ProjetASPCore.Models;
 using Rotativa;
 
 using System;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Session;
 
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Mvc;
-using ProjetASPCore.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ProjetASPCore.Services;
@@ -25,11 +24,11 @@ using ProjetASPCore.Services;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
-
-namespace projetASP.Controllers
+namespace ProjetASPCore.Controllers
 {
-    
+
     public class EtudiantController : Controller
     {
 
@@ -37,37 +36,35 @@ namespace projetASP.Controllers
 
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
+        private readonly EtudiantContext _context;
 
-        EtudiantController(IEtudiantService e, IDepartementService f)
+
+        public EtudiantController(EtudiantContext context)
         {
-            this.departementService = f;
-            this.etudiantService = e;
+            _context = context;
+
         }
 
         // GET: Etudiant
         EtudiantContext etudiantContext = new EtudiantContext();
-        private string[] ImageEx = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".svg" };
+        private readonly string[] ImageEx = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".svg" };
 
         public ActionResult Index()
         {
-            ViewBag.Current = "Home";
-           
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+            if (h != null && h1.Equals("Etudiant"))
             {
-
                 return View();
             }
             else
-            {
                 return RedirectToAction("Authentification1", "User");
-            }
-
         }
 
 
         //--------------------------------------------------------------------------------------------------------------------------
         //Modification 
-        public ActionResult Modification()
+        public async Task<IActionResult> Modification()
         {
             ViewBag.Current = "Modification";
             ViewBag.check = "Checked";
@@ -75,84 +72,57 @@ namespace projetASP.Controllers
              {
                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
              }*/
-
-
-
-
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var etudiant = await _context.Etudiants
+                           .Include(e => e.Filiere)
+                           .FirstOrDefaultAsync(m => m.cne == "1");
+            if (etudiant == null)
             {
-                Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
+                return NotFound();
+            }
 
-                return View(etudiants);
-            }
-            else
-            {
-                return RedirectToAction("Authentification1", "User");
-            }
+            return View(etudiant);
+
+
+
 
         }
-
+        private bool EtudiantExists(string id)
+        {
+            return _context.Etudiants.Any(e => e.cne == id);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Modification([Bind(Include = "cne,nationalite,email,phone,gsm,address,ville,dateNaiss,lieuNaiss")] Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
+        public async Task<IActionResult> Modification([Bind("cne,nom,prenom,password,nationalite,cin,email,phone,gsm,address,ville,typeBac,anneeBac,noteBac,mentionBac,noteFstYear,noteSndYear,dateNaiss,lieuNaiss,photo_link,Choix,Validated,Modified,Redoubler,idFil")]Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
         {
-            ViewBag.Current = "Modification";
-
-            /*Update name of buttom if user click in Upload l image seule va etre modifie 
-             
-             */
-
-            Etudiant etudiants = etudiantContext.Etudiants.Find(etudiant.cne);
-
-            if (Request.Files.Count > 0 && Update == "Upload")
+            if (etudiant.cne == null)
             {
-                //Recupere le fichier est le sauvegarder dans /image/
-                HttpPostedFileBase file = Request.Files[0];
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                string extension = Path.GetExtension(file.FileName);
-                ViewBag.exte = extension;
-                if (fileName != "" && ImageEx.Contains(extension) == true)
-                {
-                    fileName = etudiants.nom + DateTime.Now.ToString("yymmssfff") + extension;
-                    etudiants.photo_link = fileName;
-                    fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
-                    file.SaveAs(fileName);
-                    etudiants.Modified = true;
-                    etudiantContext.SaveChanges();
-                    return View(etudiants);
-
-
-                }
-                else
-                {
-                    ViewBag.err = " vous devez selectionner une image";
-                    return View(etudiants);
-
-                }
-
+                return NotFound();
             }
 
-            else
+            if (ModelState.IsValid)
             {
-                ViewBag.err = null;
-
-                //si clicke sur les valider les modification 
-                etudiants.Modified = true;
-                etudiants.Choix = choix1 + choix2 + choix3;
-                etudiants.nationalite = etudiant.nationalite;
-                etudiants.email = etudiant.email;
-                etudiants.phone = etudiant.phone;
-                etudiants.address = etudiant.address;
-                etudiants.gsm = etudiant.gsm;
-                etudiants.address = etudiant.address;
-                etudiants.ville = etudiant.ville;
-                etudiants.dateNaiss = etudiant.dateNaiss;
-                etudiants.lieuNaiss = etudiant.lieuNaiss;
-                etudiantContext.SaveChanges();
-                return RedirectToAction("SendEmailToUser");
-
+                try
+                {
+                    _context.Update(etudiant);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EtudiantExists(etudiant.cne))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return View("Index");
             }
+            ViewData["idFil"] = new SelectList(_context.Filieres, "idFil", "idFil", etudiant.idFil);
+            return View(etudiant);
+
         }
         //****************************************************************************************************************************
 
@@ -162,7 +132,11 @@ namespace projetASP.Controllers
         public ActionResult Consulter()
         {
             ViewBag.Current = "Consulter";
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
 
@@ -176,12 +150,14 @@ namespace projetASP.Controllers
 
         public ActionResult Deconnecter()
         {
-            HttpContext.Session.SetString("userId", null);
-            HttpContext.Session.SetString("cin",null);
-            HttpContext.Session.SetString("nom", null);
-            HttpContext.Session.SetString("prenom", null);
-            HttpContext.Session.SetString("role",null);
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("cin");
+            HttpContext.Session.Remove("nom");
+            HttpContext.Session.Remove("cne");
+            HttpContext.Session.Remove("prenom");
+            HttpContext.Session.Remove("role");
+
+
             return RedirectToAction("Authentification1", "User");
 
         }
@@ -192,7 +168,11 @@ namespace projetASP.Controllers
         {
             Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
             var q = new ViewAsPdf("RecuEtudiant", etudiants);
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 return q;
             }
@@ -205,14 +185,11 @@ namespace projetASP.Controllers
 
 
         [HttpGet]
-
-
-
         public ActionResult Inscription()
         {
-            EtudiantContext db = new EtudiantContext();
-            ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
-            ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
+            //EtudiantContext db = new EtudiantContext();
+            //ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
+            //ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
             ViewBag.prenom = new SelectList(etudiantContext.Etudiants, "cne", "prenom");
             ViewBag.nom = new SelectList(etudiantContext.Etudiants, "cne", "nom");
 
@@ -232,14 +209,13 @@ namespace projetASP.Controllers
                 new SelectListItem {Text="Très bien", Value="4" },
             };
 
-
-            return View();
+            Etudiant student = new Etudiant();
+            return View(student);
         }
 
         [HttpPost]
         public ActionResult Inscription(Etudiant student, string choix1, string choix2, string choix3)
         {
-
             ViewBag.prenom = new SelectList(etudiantContext.Etudiants, "cne", "prenom");
             ViewBag.nom = new SelectList(etudiantContext.Etudiants, "cne", "nom");
             EtudiantContext db = new EtudiantContext();
@@ -312,9 +288,9 @@ namespace projetASP.Controllers
             string subject = "Modification";
             ViewBag.nom = etudiants.nom;
             ViewBag.prenom = etudiants.prenom;
-            var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
+            var Resulta = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result !=null)
+            if (Resulta != null)
             {
 
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
@@ -325,11 +301,11 @@ namespace projetASP.Controllers
         }
         public ActionResult SendEmailToUser1(String email, String nom, String prenom)
         {
-            
+
             string subject = "Inscription";
             var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result.AsyncState!=null)
+            if (Result.AsyncState != null)
             {
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
 
@@ -338,7 +314,7 @@ namespace projetASP.Controllers
             return View();
         }
         [HttpPost]
-        
+
         public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
             await _emailService.SendEmailAsync(email, subject, message);
