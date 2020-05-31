@@ -1,0 +1,129 @@
+﻿@model ProjetASPCore.Models.Etudiant
+
+<div class="content">
+    <div class="container-fluid col-md-12 col-sm-12">
+        <div class="row">
+            <div class="col-md-8 " style="margin:auto;">
+                <h2 id="header_5" class="form-header text-center" data-component="header">
+                    Consultation des Informations Personnelles
+                </h2>
+                <div class="card">
+             
+                        <ul class="form-section page-section">
+                            <li id="cid_5" class="form-input-wide" data-type="control_head">
+                                <div style="display:table;width:100%">
+                                    <div class="form-header-group hasImage header-default" data-imagealign="Left">
+                                        <div class="header-logo">
+                                            @if (@Model.photo_link != null)
+                                            {
+                                                <img src="@Model.photo_link" alt="" width="200" height="200" class="header-logo-left" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Content/img/login.png" alt="" width="200" height="200" class="header-logo-left" />
+                                            }
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="form-line" data-type="control_fullname" id="id_3">
+                                <label class="form-label form-label-top form-label-auto" id="label_3" for="first_3"> Nom et Prénom </label>
+                                <div id="cid_3" class="form-input-wide">
+                                    <div data-wrapper-react="true">
+                                        <span class="form-sub-label-container " style="vertical-align:top" data-input-type="first">
+                                            <label asp-for="nom" class="form-control">@Model.nom</label>
+
+
+
+
+                                        </span>
+                                        <span class="form-sub-label-container " style="vertical-align:top" data-input-type="last">
+                                            <label asp-for="prenom" class="form-control">@Model.prenom</label>
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_12">
+                                <label class="form-label form-label-top form-label-auto" id="label_12" for="input_12"> CIN (Carte d'identité Nationale) </label>
+                                <div id="cid_12" class="form-input-wide">
+                                    <label asp-for="cin" class="form-control">@Model.cin</label>
+
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_15">
+                                <label class="form-label form-label-top form-label-auto" id="label_15" for="input_15"> CNE(Code Nationale d'Étudiant) </label>
+                                <div id="cid_15" class="form-input-wide">
+                                    <label asp-for="cne" class="form-control">@Model.cne</label>
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_15">
+                                <label class="form-label form-label-top form-label-auto" id="label_15" for="input_15"> Date de Naissance </label>
+                                <div id="cid_17" class="form-input-wide">
+                                    <input id="date" type="datetime" asp-for="dateNaiss" asp-format="{0:dd/MM/yyyy}" class="form-control" readonly />
+
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_18">
+                                <label class="form-label form-label-top form-label-auto" id="label_18" for="input_18"> Lieu de Naissance </label>
+                                <div id="cid_18" class="form-input-wide">
+                                    <label asp-for="lieuNaiss" class="form-control">@Model.lieuNaiss</label>
+
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_19">
+                                <label class="form-label form-label-top form-label-auto" id="label_19" for="input_19"> Nationalité </label>
+                                <div id="cid_19" class="form-input-wide">
+                                    <label asp-for="nationalite" class="form-control">@Model.nationalite</label>
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation" id="id_19">
+                                <label class="form-label form-label-top form-label-auto" id="label_19" for="input_19"> Numéro de téléphone </label>
+                                <div class="form-input-wide">
+                                    <label asp-for="phone" class="form-control">@Model.phone</label>
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_calculation">
+                                <label class="form-label form-label-top form-label-auto" for="input_19"> GSM </label>
+                                <div class="form-input-wide">
+                                    <label asp-for="gsm" class="form-control">@Model.gsm</label>
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_email" id="id_7">
+                                <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Email </label>
+                                <div class="form-input-wide">
+                                    <label asp-for="email" class="form-control">@Model.email</label>
+
+                                </div>
+                            </li>
+                            <li class="form-line" data-type="control_email" id="id_7">
+                                <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Adresse </label>
+                                <div class="form-input-wide">
+                                    <label asp-for="address" class="form-control">@Model.address</label>
+                                    <label class="form-sub-label" for="input_7" id="sublabel_input_7" style="min-height:13px" aria-hidden="false"> Street Adresse  </label>
+                                </div>
+                            </li>
+                      
+                            <li class="form-line" data-type="control_email" id="id_7">
+                                <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Votre Choix </label>
+                                <div>
+
+                                    <p class="form-label form-label-top form-label-auto" style="color:black"> 1: Génie  @(Model.Choix.Substring(0, 1) == "F" ? "Informatique" : "") @(Model.Choix.Substring(0, 1) == "D" ? "Industriel" : "")   @(Model.Choix.Substring(0, 1) == "P" ? "Procédé" : "")     @(Model.Choix.Substring(0, 1) == "T" ? "Réseau" : "")</p>
+                                    <p class="form-label form-label-top form-label-auto" style="color:black">  2: Génie  @(Model.Choix.Substring(1, 1) == "F" ? "Informatique" : "") @(Model.Choix.Substring(1, 1) == "D" ? "Industriel" : "")   @(Model.Choix.Substring(1, 1) == "P" ? "Procédé" : "")     @(Model.Choix.Substring(1, 1) == "T" ? "Réseau" : "")</p>
+                                    <p class="form-label form-label-top form-label-auto" style="color:black">  3: Génie  @(Model.Choix.Substring(2, 1) == "F" ? "Informatique" : "") @(Model.Choix.Substring(2, 1) == "D" ? "Industriel" : "")   @(Model.Choix.Substring(2, 1) == "P" ? "Procédé" : "")     @(Model.Choix.Substring(2, 1) == "T" ? "Réseau" : "")</p>
+
+                                </div>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

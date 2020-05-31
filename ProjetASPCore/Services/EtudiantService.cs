@@ -1,6 +1,11 @@
-﻿using OfficeOpenXml;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using ProjetASPCore.Context;
+using ProjetASPCore.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +16,14 @@ namespace ProjetASPCore.Services
 {
     public class EtudiantService : IEtudiantService
     {
+        private readonly string[] ImageEx = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".svg" };
         private EtudiantContext db = new EtudiantContext();
+        IHostingEnvironment _env;
+        public EtudiantService(IHostingEnvironment environment)
+        {
+            _env = environment;
+
+        }
 
         public byte[] ExporterExcel()
         {
@@ -135,6 +147,79 @@ namespace ProjetASPCore.Services
 
         }
 
+        public bool Modification(Etudiant etudiant, string Update, string choix1, string choix2, string choix3,IFormFile file)
+        {
+            try
+            {
+                Etudiant etudiants = FindEtudiant("R132580560");
+                
+                if(file!=null && file.Length > 0 && Update== "Upload")
+                {
+                   
+                    var imagePath = @"\Images\";
+                    var uploadPath = _env.WebRootPath + imagePath;
 
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+                    //Create uniq file name 
+                    var uniqFileName = Guid.NewGuid().ToString();
+                    var filename = Path.GetFileName(uniqFileName + "." + file.FileName.Split(".")[1].ToLower());
+                    var extension = Path.GetExtension(filename);
+                    string fullPath = uploadPath + filename;
+                    if (filename != "" && ImageEx.Contains(extension) == true)
+                    {
+                        imagePath = imagePath + @"\";
+                        var filePath = Path.Combine(imagePath, filename);
+
+                        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                        etudiants.photo_link = filePath;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                   
+                }
+
+                if (Update == "Save")
+                {
+                    etudiants.nom = etudiant.nom;
+                    etudiants.Choix = choix1+choix2+choix3;
+                    etudiants.nationalite = etudiant.nationalite;
+                    etudiants.email = etudiant.email;
+                    etudiants.phone = etudiant.phone;
+                    etudiants.address = etudiant.address;
+                    etudiants.gsm = etudiant.gsm;
+                    etudiants.address = etudiant.address;
+                    etudiants.ville = etudiant.ville;
+                    etudiants.dateNaiss = etudiant.dateNaiss;
+                    etudiants.lieuNaiss = etudiant.lieuNaiss;
+                  
+                }
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (FindEtudiant(etudiant.cne)==null)
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return true;
+        }
+
+        public Etudiant FindEtudiant(string id)
+        {
+            return db.Etudiants.Find(id);
+        }
     }
 }

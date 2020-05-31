@@ -46,12 +46,7 @@
             -->
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="@(ViewBag.Current == "Home" ? "nav-item active" : "nav-item")">
-                        <a class="nav-link" asp-area="" asp-controller="Etudiant" asp-action="Index">
-                            <i class="material-icons">account_box</i>
-                            <p>Bienvenue </p>
-                        </a>
-                    </li>
+                  
                     <li class="@(ViewBag.Current == "Home" ? "nav-item active" : "nav-item")">
                         <a class="nav-link" asp-area="" asp-controller="Etudiant" asp-action="Index">
                             <i class="material-icons">home</i>
@@ -66,7 +61,7 @@
                     </li>
 
                     <li class="@(ViewBag.Current == "Consulter" ? "nav-item active" : "nav-item")">
-                        <a class="nav-link" asp-area="" asp-controller="Etudiant" asp-action="Modification">
+                        <a class="nav-link" asp-area="" asp-controller="Etudiant" asp-action="Consulter">
                             <i class="material-icons">library_books</i>
                             <p> Consulter la fiche </p>
                         </a>
@@ -83,11 +78,10 @@
             </div>
         </div>
         <div class="main-panel">
-            <!-- End Navbar -->
+          
             @RenderBody()
         </div>
     </div>
-
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -110,6 +104,8 @@
         <!--<script src="~/Content/js/material-dashboard.js?v=2.1.0"></script>-->
         <!-- Material Dashboard DEMO methods, don't include it in your project! -->
         <script src="~/Content/demo/demo.js"></script>
+
+        <script src="~/js/EtudiantScript.js"></script>            
         <script>
             $(document).ready(function () {
                 $().ready(function () {
@@ -237,6 +233,7 @@
             });
         </script>
     </environment>
+
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"

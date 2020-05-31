@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmtpClient = System.Net.Mail.SmtpClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ProjetASPCore.Controllers
 {
@@ -34,17 +35,17 @@ namespace ProjetASPCore.Controllers
     public class EtudiantController : Controller
     {
 
+
         private readonly IConfiguration _configuration;
         private readonly IEtudiantService etudiantService;
-        private readonly IDepartementService departementService;
-        private readonly EtudiantContext _context;
+   
+        IHostingEnvironment _env;
 
-
-        public EtudiantController(EtudiantContext context, IConfiguration configuration)
+        public EtudiantController(IEtudiantService etudiantService,IHostingEnvironment environment)
         {
-            _context = context;
-            _configuration = configuration;
-
+            _env = environment;
+            this.etudiantService = etudiantService;
+         
         }
 
 
@@ -67,64 +68,50 @@ namespace ProjetASPCore.Controllers
 
         //--------------------------------------------------------------------------------------------------------------------------
         //Modification 
-        public async Task<IActionResult> Modification()
+        public IActionResult Modification()
         {
             ViewBag.Current = "Modification";
-            ViewBag.check = "Checked";
+            ViewBag.err = "";
+          
             /* if (id == null)
              {
                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
              }*/
-            var etudiant = await _context.Etudiants
-                           .Include(e => e.Filiere)
-                           .FirstOrDefaultAsync(m => m.cne == "1");
-            if (etudiant == null)
-            {
-                return NotFound();
-            }
+            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
 
             return View(etudiant);
-
-
-
-
         }
-        private bool EtudiantExists(string id)
-        {
-            return _context.Etudiants.Any(e => e.cne == id);
-        }
+ 
+     
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Modification([Bind("cne,nom,prenom,password,nationalite,cin,email,phone,gsm,address,ville,typeBac,anneeBac,noteBac,mentionBac,noteFstYear,noteSndYear,dateNaiss,lieuNaiss,photo_link,Choix,Validated,Modified,Redoubler,idFil")]Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
+        public IActionResult Modification([Bind("cne,nom,prenom,nationalite,cin,email,phone,gsm,address,ville,dateNaiss,lieuNaiss,photo_link,Choix")]Etudiant etudiant, string Upload, String choix1, String choix2, String choix3,IFormFile file)
         {
-            if (etudiant.cne == null)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
-                try
+                if (etudiantService.Modification(etudiant, Upload, choix1, choix2, choix3, file))
                 {
-                    _context.Update(etudiant);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Modification");
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!EtudiantExists(etudiant.cne))
+                    if (Upload == "Upload")
                     {
-                        return NotFound();
+                        ViewBag.err = " vous devez selectionner une image";
+                        return View(etudiant);
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+
                 }
-                return View("Index");
             }
-            ViewData["idFil"] = new SelectList(_context.Filieres, "idFil", "idFil", etudiant.idFil);
-            return View(etudiant);
+            else
+            {
+                return View(etudiant);
+            }
+            return NotFound();
+         
 
         }
         //****************************************************************************************************************************
@@ -135,20 +122,20 @@ namespace ProjetASPCore.Controllers
         public ActionResult Consulter()
         {
             ViewBag.Current = "Consulter";
-            var h = HttpContext.Session.GetString("userId");
-            var h1 = HttpContext.Session.GetString("role");
 
-            if (h != null && h1.Equals("Etudiant"))
+            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
 
-            {
-                Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
+            return View(etudiant);
+            
+        }
+        public ActionResult Recu()
+        {
+            ViewBag.Current = "Consulter";
+            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
 
-                return View(etudiants);
-            }
-            else
-            {
-                return RedirectToAction("Authentification1", "User");
-            }
+            return new ViewAsPdf("Recu",etudiant);
+
+
         }
 
         public ActionResult Deconnecter()
@@ -159,30 +146,8 @@ namespace ProjetASPCore.Controllers
             HttpContext.Session.Remove("cne");
             HttpContext.Session.Remove("prenom");
             HttpContext.Session.Remove("role");
+           return RedirectToAction("Authentification1", "User");
 
-
-            return RedirectToAction("Authentification1", "User");
-
-        }
-
-        //pour Imprimer le pdf
-
-        public ActionResult PrintConsultation()
-        {
-            Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
-            var q = new ViewAsPdf("RecuEtudiant", etudiants);
-            var h = HttpContext.Session.GetString("userId");
-            var h1 = HttpContext.Session.GetString("role");
-
-            if (h != null && h1.Equals("Etudiant"))
-
-            {
-                return q;
-            }
-            else
-            {
-                return RedirectToAction("Authentification1", "User");
-            }
         }
 
 

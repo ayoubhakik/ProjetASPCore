@@ -44,5 +44,11 @@
     <Folder Include="Views\Departement\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Content Update="Views\Etudiant\Recu.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 
 </Project>
