@@ -23,9 +23,12 @@ namespace ProjetASPCore.Controllers
 
     public class DepartementController : Controller
     {
-        
+
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
+
+
+
 
         public DepartementController(IEtudiantService e, IDepartementService f)
         {
@@ -35,7 +38,17 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Authentification", "User");
+            }
 
         }
 
@@ -43,8 +56,10 @@ namespace ProjetASPCore.Controllers
 
         public void EnvoyerLesFilieres()
         {
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            if (h != null && h1.Equals("Departement"))
             {
                 departementService.EnvoyerLesFilieres();
             }
@@ -55,9 +70,12 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult DeleteAllStudents()
         {
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
-                departementService.DeleteAllStudents();                
+                departementService.DeleteAllStudents();
                 return RedirectToAction("Index");
             }
             else
@@ -67,17 +85,20 @@ namespace ProjetASPCore.Controllers
         public ActionResult Search(string searchBy, string cne)
         {
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
-                if (departementService.Search(searchBy,cne).Count == 0)
+                if (departementService.Search(searchBy, cne).Count == 0)
                 {
                     ViewBag.error = true;
                     return View();
-                    
+
                 }
                 ViewBag.error = false;
 
-                return View(departementService.Search(searchBy,cne));
+                return View(departementService.Search(searchBy, cne));
 
             }
             else
@@ -88,7 +109,10 @@ namespace ProjetASPCore.Controllers
         //suppression des etudiants importes mais pas les redoublants
         public ActionResult DeleteImportedStudents()
         {
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
 
                 departementService.DeleteImportedStudents();
@@ -103,11 +127,14 @@ namespace ProjetASPCore.Controllers
         //suppression des etudiants (placer les etudiants redoublants dans la corbeille)
         public ActionResult SupprimerEtudiant(string id)
         {
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 if (id != null)
                 {
-                    
+
                     ViewBag.Current = "Index";
 
                     return RedirectToAction("Index");
@@ -123,7 +150,10 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Corbeille()
         {
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 EtudiantContext db = new EtudiantContext();
 
@@ -140,7 +170,10 @@ namespace ProjetASPCore.Controllers
         public ActionResult Setting()
         {
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 ///must be treated after
                 EtudiantContext db = new EtudiantContext();
@@ -161,7 +194,10 @@ namespace ProjetASPCore.Controllers
         [HttpPost]
         public ActionResult Setting(DateTime dateNotification, DateTime dateAttribution)
         {
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 departementService.Setting(dateNotification, dateAttribution);
 
@@ -181,7 +217,10 @@ namespace ProjetASPCore.Controllers
         public ActionResult Indexww()
         {
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 ViewBag.Current = "index";
 
@@ -197,7 +236,10 @@ namespace ProjetASPCore.Controllers
         public ActionResult ImporterEtudiants()
         {
             ViewBag.Current = "importerEtudiants";
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 //must be treated after
                 EtudiantContext db = new EtudiantContext();
@@ -214,7 +256,7 @@ namespace ProjetASPCore.Controllers
 
         //must be treated
         [HttpPost]
-        public ActionResult ImporterEtudiantExcel(IFormFile  excelFile)
+        public ActionResult ImporterEtudiantExcel(IFormFile excelFile)
         {
 
 
@@ -225,7 +267,7 @@ namespace ProjetASPCore.Controllers
 
                     EtudiantContext db = new EtudiantContext();
                     IFormFile file = Request.Form.Files["excelfile"];
-                    Byte[] contentLength =new UTF8Encoding(true).GetBytes(file.FileName);
+                    Byte[] contentLength = new UTF8Encoding(true).GetBytes(file.FileName);
 
                     if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName) && (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx")))
                     {
@@ -285,7 +327,10 @@ namespace ProjetASPCore.Controllers
         public ActionResult ImporterNotes()
         {
             ViewBag.Current = "importerNotes";
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 EtudiantContext db = new EtudiantContext();
                 if (db.Settings.FirstOrDefault().importEtudiant)
@@ -363,7 +408,10 @@ namespace ProjetASPCore.Controllers
         public ActionResult AttributionFiliere()
         {
             ViewBag.Current = "attributionFiliere";
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 EtudiantContext db = new EtudiantContext();
                 List<Etudiant> list = db.Etudiants.ToList();
@@ -499,7 +547,10 @@ namespace ProjetASPCore.Controllers
         {
 
             ViewBag.Current = "attributionFiliere";
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 //EtudiantContext db = new EtudiantContext();
                 //return a  list sorted in a desendent way
@@ -515,10 +566,13 @@ namespace ProjetASPCore.Controllers
         {
             ViewBag.Current = "statistiques";
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 //essayons de retourner tous les etudiants
-                Dictionary<string, long> table=departementService.statistiques();
+                Dictionary<string, long> table = departementService.statistiques();
 
                 ViewBag.nbrTotal = table["total"];
 
@@ -594,7 +648,7 @@ namespace ProjetASPCore.Controllers
             string[] vx = { "info", "indus", "gtr", "gpmc" };
             double[] vy = { infoP, indusP, gtrP, gpmcP };
 
-     
+
             return null;
         }
 
@@ -602,9 +656,9 @@ namespace ProjetASPCore.Controllers
         [HttpPost]
         public IActionResult ExtraireNonValide()
         {
-           
-                return File(departementService.ExtraireNonValide(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
-            
+
+            return File(departementService.ExtraireNonValide(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EtudiantNonValide.xlsx");
+
         }
 
         //Exporter toutes les informations des étudiants
@@ -612,7 +666,7 @@ namespace ProjetASPCore.Controllers
         public IActionResult ExportExcel()
         {
             return File(departementService.ExportExcel(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "testing.xlsx");
-          
+
         }
 
         ///fonction pour les info
@@ -620,14 +674,17 @@ namespace ProjetASPCore.Controllers
         public IActionResult ExportExcelAttributed()
         {
             //Données à exporter
-                return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
+            return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
         }
 
 
         public ActionResult Visualiser()
         {
             ViewBag.Current = "visualiser";
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
 
                 return View(departementService.students());
@@ -643,7 +700,10 @@ namespace ProjetASPCore.Controllers
 
             var q = new ViewAsPdf("ImprimerEtudiant", db.Etudiants.ToList());
 
-            if (UserValide.IsValid() && UserValide.IsAdmin())
+            var h = HttpContext.Session.GetInt32("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Departement"))
             {
                 return q;
             }
@@ -652,10 +712,10 @@ namespace ProjetASPCore.Controllers
                 return RedirectToAction("Authentification", "User");
             }
         }
-         
-         
-         
-         
+
+
+
+
 
     }
 }

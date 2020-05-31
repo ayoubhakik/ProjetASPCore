@@ -28,12 +28,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ProjetASPCore.Controllers
 {
-    
+
     public class EtudiantController : Controller
     {
 
         private readonly IEmailService _emailService;
-       
+
         private readonly IEtudiantService etudiantService;
         private readonly IDepartementService departementService;
         private readonly EtudiantContext _context;
@@ -42,7 +42,7 @@ namespace ProjetASPCore.Controllers
         public EtudiantController(EtudiantContext context)
         {
             _context = context;
-         
+
         }
 
         // GET: Etudiant
@@ -51,8 +51,14 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Index()
         {
-            return View();
-
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+            if (h != null && h1.Equals("Etudiant"))
+            {
+                return View();
+            }
+            else
+                return RedirectToAction("Authentification1", "User");
         }
 
 
@@ -75,9 +81,9 @@ namespace ProjetASPCore.Controllers
             }
 
             return View(etudiant);
-           
-            
-           
+
+
+
 
         }
         private bool EtudiantExists(string id)
@@ -89,7 +95,7 @@ namespace ProjetASPCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modification([Bind("cne,nom,prenom,password,nationalite,cin,email,phone,gsm,address,ville,typeBac,anneeBac,noteBac,mentionBac,noteFstYear,noteSndYear,dateNaiss,lieuNaiss,photo_link,Choix,Validated,Modified,Redoubler,idFil")]Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
         {
-            if (etudiant.cne==null)
+            if (etudiant.cne == null)
             {
                 return NotFound();
             }
@@ -126,7 +132,11 @@ namespace ProjetASPCore.Controllers
         public ActionResult Consulter()
         {
             ViewBag.Current = "Consulter";
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
 
@@ -140,12 +150,14 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Deconnecter()
         {
-            HttpContext.Session.SetString("userId", null);
-            HttpContext.Session.SetString("cin",null);
-            HttpContext.Session.SetString("nom", null);
-            HttpContext.Session.SetString("prenom", null);
-            HttpContext.Session.SetString("role",null);
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("cin");
+            HttpContext.Session.Remove("nom");
+            HttpContext.Session.Remove("cne");
+            HttpContext.Session.Remove("prenom");
+            HttpContext.Session.Remove("role");
+
+
             return RedirectToAction("Authentification1", "User");
 
         }
@@ -156,7 +168,11 @@ namespace ProjetASPCore.Controllers
         {
             Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
             var q = new ViewAsPdf("RecuEtudiant", etudiants);
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 return q;
             }
@@ -274,7 +290,7 @@ namespace ProjetASPCore.Controllers
             ViewBag.prenom = etudiants.prenom;
             var Resulta = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Resulta !=null)
+            if (Resulta != null)
             {
 
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
@@ -285,11 +301,11 @@ namespace ProjetASPCore.Controllers
         }
         public ActionResult SendEmailToUser1(String email, String nom, String prenom)
         {
-            
+
             string subject = "Inscription";
             var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result.AsyncState!=null)
+            if (Result.AsyncState != null)
             {
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
 
@@ -298,7 +314,7 @@ namespace ProjetASPCore.Controllers
             return View();
         }
         [HttpPost]
-        
+
         public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
         {
             await _emailService.SendEmailAsync(email, subject, message);
