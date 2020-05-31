@@ -1,6 +1,106 @@
+@model IEnumerable<ProjetASPCore.Models.Etudiant>
+
 @{
     Layout = "_DepartementLayout";
 }
 
-<h2>Index</h2>
 
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+
+                    <div class="card-header" style="background:linear-gradient(to bottom, #11273F, #061323, #204773);">
+                        <h2 class="card-title" style="color:#ffffff">Tous les Etudiant</h2>
+
+                    </div>
+                    <div class="card-body table-responsive" style="overflow-x:hidden">
+                        <div style="position:relative;left:1100px; ">
+                            <a href="../Departement/PrintConsultation"><i class="fa fa-print " style="color:black; font-size:25px;position:relative;bottom:10px;  "></i></a>
+                        </div>
+                        <button class="btn btn-outline-secondary" onclick="exporting()">Exporter en Excel</button>
+
+                        <table class="table table-hover">
+                            <thead style="color:#B49082;">
+                            <th>Cne</th>
+                            <th>Cin</th>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Choix</th>
+                            <th>Note premiere annee</th>
+                            <th>Note deuxieme annee</th>
+                            <th>Note generale</th>
+
+                            <th>valide ?</th>
+                            </thead>
+                            <tbody>
+                                @if (Model == null)
+                                {
+
+                                }
+                                else
+                                {
+
+                                    foreach (var item in Model)
+                                    {
+                                        if (!item.Redoubler)
+                                        {
+                                            <tr>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.cne)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.cin)
+                                                </th>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.nom)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.prenom)
+                                                </td>
+                                                <th>
+                                                    @if (item.Validated)
+                                                    {
+                                                        @Html.DisplayFor(modelItem => item.Choix)}
+                                                </th>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.noteFstYear)
+                                                </td>
+                                                <th>
+                                                    @Html.DisplayFor(modelItem => item.noteSndYear)
+                                                </th>
+                                                <th>
+                                                    @((item.noteSndYear + item.noteFstYear) / 2)
+                                                </th>
+                                                <td>
+                                                    @if (item.Validated == true)
+                                                    {
+                                                        <span>Oui</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Non </span>
+                                                    }
+                                                    @Html.ActionLink("  Supprimer", "SupprimerEtudiant", new { id = item.cne })
+
+                                                </td>
+
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="text-align:center;background-color:rgba(0,0,0,1);">Copyright © 2020 ENSA. All Rights Reserved.</div>

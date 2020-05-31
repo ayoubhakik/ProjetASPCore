@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetASPCore.Models;
 using ProjetASPCore.Context;
 using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Identity;
 
 namespace ProjetASPCore.Controllers
 {
@@ -17,15 +18,11 @@ namespace ProjetASPCore.Controllers
         [HttpGet]
         public ActionResult Authentification()
         {
-
-            if (UserValide.IsValid())
+            if (HttpContext.Session.GetInt32("userId") != null)
             {
-
                 return RedirectToAction("Index", "Departement");
             }
-            else
-                return View();
-
+            return View();
         }
         public ActionResult Resultat()
         {
@@ -40,12 +37,14 @@ namespace ProjetASPCore.Controllers
         [HttpPost]
         public ActionResult Authentification(Departement login, string ReturnUrl = "")
         {
-            String button = HttpContext.Session.GetString("loginBtn");
+
+            String button = Request.Form["loginBtn"];
             string message = "";
             if (button == "Login")
             {
-                string userName = HttpContext.Session.GetString("userName");
-                string mdp = HttpContext.Session.GetString("mdp");
+                string userName = Request.Form["userName"];
+                string mdp = Request.Form["mdp"];
+
                 EtudiantContext dbset = new EtudiantContext();
                 var userLogin = (from data in dbset.Departement
                                  where data.username == userName && data.password == mdp
@@ -74,10 +73,13 @@ namespace ProjetASPCore.Controllers
         }
         public ActionResult Logout()
         {
-            HttpContext.Session.SetString("userName", null);
-            HttpContext.Session.SetString("NomDep", null);
-            HttpContext.Session.SetString("EmailDep", null);
-            HttpContext.Session.SetString("userId", null);
+            HttpContext.Session.Remove("userName");
+
+            HttpContext.Session.Remove("NomDep");
+
+            HttpContext.Session.Remove("EmailDep");
+            HttpContext.Session.Remove("userId");
+
 
             return RedirectToAction("Authentification", "User");
         }
@@ -93,26 +95,28 @@ namespace ProjetASPCore.Controllers
             ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
             ViewBag.Attributted = db.Settings.FirstOrDefault().Attributted;
             ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
-            if (UserValide.IsValid())
+            if (HttpContext.Session.GetString("userId") == null)
             {
+                return View();
 
-                return RedirectToAction("Index", "Etudiant");
             }
             else
-                return View();
+                return RedirectToAction("Index", "Etudiant");
 
         }
 
         [HttpPost]
         public ActionResult Authentification1(Etudiant login, string ReturnUrl = "")
         {
-            String button = HttpContext.Session.GetString("loginBtn");
+
+
+            String button = Request.Form["loginBtn"];
             string message = "";
             if (button == "Login")
             {
-                string cne = HttpContext.Session.GetString("cne");
-                string cin = HttpContext.Session.GetString("cin");
-                string mdp = HttpContext.Session.GetString("mdp");
+                string cne = Request.Form["cne"];
+                string cin = Request.Form["cin"];
+                string mdp = Request.Form["mdp"];
                 EtudiantContext dbset = new EtudiantContext();
                 ViewBag.Delai = dbset.Settings.FirstOrDefault().Delai;
                 ViewBag.Attributted = dbset.Settings.FirstOrDefault().Attributted;

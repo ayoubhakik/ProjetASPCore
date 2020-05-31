@@ -25,27 +25,26 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using SmtpClient = System.Net.Mail.SmtpClient;
+using Microsoft.Extensions.Configuration;
 
 namespace ProjetASPCore.Controllers
 {
-    
+
     public class EtudiantController : Controller
     {
 
-        private readonly IEmailService _emailService;
-       
-        private readonly IEtudiantService _etudiantService;
-        private readonly IDepartementService _departementService;
+        private readonly IConfiguration _configuration;
+        private readonly IEtudiantService etudiantService;
+        private readonly IDepartementService departementService;
         private readonly EtudiantContext _context;
 
 
-        public EtudiantController(EtudiantContext context, IEmailService emailService, IEtudiantService etudiantService, IDepartementService departementService )
+        public EtudiantController(EtudiantContext context, IConfiguration configuration)
         {
             _context = context;
-            _emailService = emailService;
-            _etudiantService = etudiantService;
-            _departementService = departementService;
-         
+            _configuration = configuration;
+
         }
 
 
@@ -55,8 +54,14 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Index()
         {
-            return View();
-
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+            if (h != null && h1.Equals("Etudiant"))
+            {
+                return View();
+            }
+            else
+                return RedirectToAction("Authentification1", "User");
         }
 
 
@@ -79,9 +84,9 @@ namespace ProjetASPCore.Controllers
             }
 
             return View(etudiant);
-           
-            
-           
+
+
+
 
         }
         private bool EtudiantExists(string id)
@@ -93,7 +98,7 @@ namespace ProjetASPCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Modification([Bind("cne,nom,prenom,password,nationalite,cin,email,phone,gsm,address,ville,typeBac,anneeBac,noteBac,mentionBac,noteFstYear,noteSndYear,dateNaiss,lieuNaiss,photo_link,Choix,Validated,Modified,Redoubler,idFil")]Etudiant etudiant, string Update, String choix1, String choix2, String choix3)
         {
-            if (etudiant.cne==null)
+            if (etudiant.cne == null)
             {
                 return NotFound();
             }
@@ -130,7 +135,11 @@ namespace ProjetASPCore.Controllers
         public ActionResult Consulter()
         {
             ViewBag.Current = "Consulter";
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
 
@@ -144,12 +153,14 @@ namespace ProjetASPCore.Controllers
 
         public ActionResult Deconnecter()
         {
-            HttpContext.Session.SetString("userId", null);
-            HttpContext.Session.SetString("cin",null);
-            HttpContext.Session.SetString("nom", null);
-            HttpContext.Session.SetString("prenom", null);
-            HttpContext.Session.SetString("role",null);
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("cin");
+            HttpContext.Session.Remove("nom");
+            HttpContext.Session.Remove("cne");
+            HttpContext.Session.Remove("prenom");
+            HttpContext.Session.Remove("role");
+
+
             return RedirectToAction("Authentification1", "User");
 
         }
@@ -160,7 +171,11 @@ namespace ProjetASPCore.Controllers
         {
             Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
             var q = new ViewAsPdf("RecuEtudiant", etudiants);
-            if (UserValide.IsValid() && UserValide.IsStudent())
+            var h = HttpContext.Session.GetString("userId");
+            var h1 = HttpContext.Session.GetString("role");
+
+            if (h != null && h1.Equals("Etudiant"))
+
             {
                 return q;
             }
@@ -263,49 +278,140 @@ namespace ProjetASPCore.Controllers
             }
             else return View(plain);
         }
+        /*
 
+                public ActionResult SendEmailToUser()
+                {
 
+                    bool Result = false;
+                    Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
+
+                    string email = etudiants.email;
+                    string subject = "Modification";
+                    ViewBag.nom = etudiants.nom;
+                    ViewBag.prenom = etudiants.prenom;
+                    var Resulta = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
+                        "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
+                    if (Resulta != null)
+                    {
+
+                        Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
+
+                        return RedirectToAction("Modification");
+                    }
+                    return View();
+                }
+                public ActionResult SendEmailToUser1(String email, String nom, String prenom)
+                {
+
+                    string subject = "Inscription";
+                    var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
+                        "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
+                    if (Result.IsCompleted)
+                    {
+                        Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
+
+                        return RedirectToAction("Authentification1", "User");
+                    }
+                    return View();
+                }
+                [HttpPost]
+
+                public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
+                {
+                    await _emailService.SendEmailAsync(email, subject, message);
+                    return Ok();
+                }
+                */
         public ActionResult SendEmailToUser()
         {
-
             bool Result = false;
             Etudiant etudiants = etudiantContext.Etudiants.Find(HttpContext.Session.GetString("userId"));
-
             string email = etudiants.email;
             string subject = "Modification";
             ViewBag.nom = etudiants.nom;
             ViewBag.prenom = etudiants.prenom;
-            var Resulta = SendEmailAsync(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
+            Result = SendEmail(email, subject, "<p> Hello" + " " + @ViewBag.nom + " " + @ViewBag.prenom + ",<br/>some modifications had been done <br />Verify your account </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Resulta !=null)
+            if (Result == true)
             {
-
+                //  Json(Result,JsonRequestBehavior.AllowGet);
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
-
                 return RedirectToAction("Modification");
             }
             return View();
         }
+        public bool SendEmail(String toEmail, string subject, string EmailBody)
+        {
+            try
+            {
+                String senderEmail = _configuration["Email:Email"];
+                String senderPassword = _configuration["Email:Password"];
+                /* WebMail.SmtpServer = "smtp.gmail.com";
+                 WebMail.SmtpPort = 587;
+                 WebMail.SmtpUseDefaultCredentials = true;
+                 WebMail.UserName = sendereEmail;
+                 WebMail.Password = senderPassword;
+                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
+                Message.IsBodyHtml = true;
+                Message.BodyEncoding = UTF8Encoding.UTF8;
+                client.Send(Message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public ActionResult SendEmailToUser1(String email, String nom, String prenom)
         {
-            
+            bool Result = false;
             string subject = "Inscription";
-            var Result = SendEmailAsync(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
+            Result = SendEmail(email, subject, "<p> Hello" + " " + nom + " " + prenom + ",<br/>Vous avez inscrit sur la plateforme d'ensas <br />Veuillez verifier votre compte </p>" +
                 "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>");
-            if (Result.AsyncState!=null)
+            if (Result == true)
             {
+                //Json(Result, JsonRequestBehavior.AllowGet);
                 Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
-
                 return RedirectToAction("Authentification1", "User");
             }
             return View();
         }
-        [HttpPost]
-        
-        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
+        public bool SendEmail1(String toEmail, string subject, string EmailBody)
         {
-            await _emailService.SendEmailAsync(email, subject, message);
-            return Ok();
+            try
+            {
+                String senderEmail = _configuration["Email:Email"];
+                String senderPassword = _configuration["Email:Password"];
+                /* WebMail.SmtpServer = "smtp.gmail.com";
+                 WebMail.SmtpPort = 587;
+                 WebMail.SmtpUseDefaultCredentials = true;
+                 WebMail.UserName = sendereEmail;
+                 WebMail.Password = senderPassword;
+                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
+                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
+                Message.IsBodyHtml = true;
+                Message.BodyEncoding = UTF8Encoding.UTF8;
+                client.Send(Message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }
