@@ -361,7 +361,7 @@ namespace ProjetASPCore.Controllers
 
 
 
-                                //db.etudiants.Add(e);
+                                // db.Etudiants.Add(e);
                                 Console.WriteLine(" out ......");
 
                             }
