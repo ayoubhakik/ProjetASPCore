@@ -40,7 +40,7 @@ namespace ProjetASPCore
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddTransient<IEmailService, EmailService>();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<EtudiantContext>();
             services.AddSingleton<IEtudiantService, EtudiantService>();

@@ -9,15 +9,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
-using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using System.Net.Mail;
+using System.Net;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace ProjetASPCore.Services
 {
     public class DepartementService:IDepartementService
     {
         private EtudiantContext db = new EtudiantContext();
-        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
+        public DepartementService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+
+        }
 
         public Boolean AttributionFiliere(string infoMax, string indusMax, string gtrMax, string gpmcMax)
         {
@@ -314,11 +321,7 @@ namespace ProjetASPCore.Services
 
             db.SaveChanges();
         }
-        public async Task<IActionResult> SendEmailAsync(string email, string subject, string message)
-        {
-            await _emailService.SendEmailAsync(email, subject, message);
-            return null;
-        }
+
         public void EnvoyerLesFilieres()
         {
             for (int i = 0; i < db.Etudiants.ToList().Count; i++)
@@ -326,17 +329,46 @@ namespace ProjetASPCore.Services
                 if (db.Etudiants.ToList()[i].email != null)
                 {
                     string body = "<div border='2px black solid'><h1 color='red'>Bonjour Mr/Mme " + db.Etudiants.ToList()[i].nom + " " + db.Etudiants.ToList()[i].prenom + "</h1>" +
-                                                "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.Etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
-                                                "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
-                                                "</div>";
-                    var Result = SendEmailAsync(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
-                    if (Result.AsyncState != null)
+                                                    "<p>Apres avoir faire l'attribution des filieres, on vient de vous informer que votre filiere est : " + db.Filieres.Find(db.Etudiants.ToList()[i].idFil).nomFil + "</p><br/>" +
+                                                    "<button color='blue'><a href='localhost:localhost:52252/User/Authentification1'>Cliquer ici!</a></button>" +
+                                                    "</div>";
+                    Boolean Result = SendEmail(db.Etudiants.ToList()[i].email, "Information a propos la filiere attribuer ", body);
+                    if (Result == true)
                     {
-                        //Json(Result, JsonRequestBehavior.AllowGet);
+                       // Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
                     }
                 }
 
 
+            }
+        }
+        public bool SendEmail(String toEmail, string subject, string EmailBody)
+        {
+            try
+            {
+                String senderEmail = _configuration["Email:Email"];
+                String senderPassword = _configuration["Email:Password"];
+                /* WebMail.SmtpServer = "smtp.gmail.com";
+                 WebMail.SmtpPort = 587;
+                 WebMail.SmtpUseDefaultCredentials = true;
+                 WebMail.UserName = sendereEmail;
+                 WebMail.Password = senderPassword;
+                 WebMail.Send(to: toEmail, subject: subject, body: EmailBody, isBodyHtml: true);*/
+                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                MailMessage Message = new MailMessage(senderEmail, toEmail, subject, EmailBody);
+                Message.IsBodyHtml = true;
+                Message.BodyEncoding = UTF8Encoding.UTF8;
+                client.Send(Message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
