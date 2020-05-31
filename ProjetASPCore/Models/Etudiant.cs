@@ -34,6 +34,7 @@ namespace ProjetASPCore.Models
         [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Le CIN ne peut contenir que des lettres et des chiffres.")]
         public string cin { get; set; }
 
+
         [EmailAddress(ErrorMessage = "Adresse email invalide.")]
         public string email { get; set; }
 

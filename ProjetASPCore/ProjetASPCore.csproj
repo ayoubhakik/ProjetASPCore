@@ -43,5 +43,10 @@
   <ItemGroup>
     <Folder Include="Views\Departement\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Etudiant\Recu.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
 
 </Project>

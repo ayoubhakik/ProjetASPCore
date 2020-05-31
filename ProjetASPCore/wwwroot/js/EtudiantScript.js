@@ -94,3 +94,6 @@ function desactivefilieres() {
 
 }
 
+$(".date").datepicker({
+    format: 'dd/mm/yyyy'
+});
