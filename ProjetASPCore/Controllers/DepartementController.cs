@@ -699,7 +699,7 @@ namespace ProjetASPCore.Controllers
 
 
             }
-
+            /*
             //Envoi du fichier dans par http
             using (var memoryStream = new MemoryStream())
             {
@@ -713,7 +713,7 @@ namespace ProjetASPCore.Controllers
                 Response.Clear();
                 Response.End();
             }
-
+            */
 
 
         }

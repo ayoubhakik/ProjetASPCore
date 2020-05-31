@@ -1,6 +1,16 @@
-﻿<title>@ViewData["Title"] - DemoGoogleChart</title>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+﻿
+@{
+    /**/
 
+    /**/
+    Layout = "~/Views/Shared/_DepartementLayout.cshtml";
+}
+<br />
+<br />
+<br/>
+<br />
+<title>@ViewData["Title"] - DemoGoogleChart</title>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="chart_div"></div>
 <script type="text/javascript">
     google.charts.load('current', {
@@ -12,11 +22,11 @@
             url: 'StackedChart/PopulationChart',
             dataType: "json",
             type: "GET",
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 var err = eval("(" + xhr.responseText + ")");
                 toastr.error(err.message);
             },
-            success: function(data) {
+            success: function (data) {
                 PopulationChart(data);
                 return false;
             }
@@ -27,7 +37,7 @@
         var dataArray = [
             ['Filiere', 'Nombre des Etudiants']
         ];
-        $.each(data, function(i, item) {
+        $.each(data, function (i, item) {
             dataArray.push([item.Filiere, item.nbr_stud]);
         });
         var data = google.visualization.arrayToDataTable(dataArray);
@@ -52,6 +62,4 @@
         return false;
     }
 </script>
-
-
 
