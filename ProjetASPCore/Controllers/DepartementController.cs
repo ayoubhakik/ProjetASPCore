@@ -544,95 +544,45 @@ namespace ProjetASPCore.Controllers
                 return RedirectToAction("Authentification", "User");
         }
 
-        public ActionResult Statistiques()
-        {
-            ViewBag.Current = "statistiques";
+        /* public ActionResult Statistiques()
+         {
+             ViewBag.Current = "statistiques";
 
-            var h = HttpContext.Session.GetInt32("userId");
-            var h1 = HttpContext.Session.GetString("role");
+             var h = HttpContext.Session.GetInt32("userId");
+             var h1 = HttpContext.Session.GetString("role");
 
-            if (h != null && h1.Equals("Departement"))
-            {
-                //essayons de retourner tous les etudiants
-                Dictionary<string, long> table = departementService.statistiques();
+             if (h != null && h1.Equals("Departement"))
+             {
+                 //essayons de retourner tous les etudiants
+                 Dictionary<string, long> table = departementService.statistiques();
 
-                ViewBag.nbrTotal = table["total"];
+                 ViewBag.nbrTotal = table["total"];
 
-                ViewBag.nbrReste = table["nbrRest"];
-                ViewBag.info = table["info"];
-                ViewBag.gtr = table["gtr"];
-                ViewBag.gpmc = table["gpmc"];
-                ViewBag.indus = table["indus"];
-                //les pourcentages
+                 ViewBag.nbrReste = table["nbrRest"];
+                 ViewBag.info = table["info"];
+                 ViewBag.gtr = table["gtr"];
+                 ViewBag.gpmc = table["gpmc"];
+                 ViewBag.indus = table["indus"];
+                 //les pourcentages
 
-                return View();
-            }
-            else
-                return RedirectToAction("Authentification", "User");
-        }
-
-        public ActionResult Chart()
-        {
-            //essayons de retourner tous les etudiants
-            EtudiantContext db = new EtudiantContext();
-            List<Etudiant> list = db.Etudiants.ToList();
-            //initialisation des compteurs des filieres
-            int info = 0, indus = 0, gtr = 0, gpmc = 0;
-
-            //variable pour les nombre totale et le reste qui n'a pas choisi les filieres
-            int nbrTotal = list.Count, nbrReste = 0;
-
-            for (int i = 0; i < nbrTotal; i++)
-            {
-                if (list[i].Choix == null)
-                {
-                    //un etudiant avec null dans choix alors on va l'es ajouter dans le reste
-                    nbrReste++;
-                }
-                //sinon on va traiter les choix comme ca
-                else
-                {
-                    if (list[i].Validated)
-                    {
-                        char[] chiffr = (list[i].Choix).ToCharArray();
-
-                        if (chiffr[0] == 'F')
-                        {
-                            info++;
-                        }
-                        if (chiffr[0] == 'P')
-                        {
-                            gpmc++;
-                        }
-                        if (chiffr[0] == 'T')
-                        {
-                            gtr++;
-                        }
-                        if (chiffr[0] == 'D')
-                        {
-                            indus++;
-                        }
-                    }
-
-                }
-
-            }
-
-            //les pourcentages
-            //double nbrTotalP = Convert.ToDouble(nbrTotal) / Convert.ToDouble(nbrTotal) * 100;
-            //double nbrResteP = Convert.ToDouble(nbrReste) / Convert.ToDouble(nbrTotal) * 100;
-            double infoP = Convert.ToDouble(info) / Convert.ToDouble(nbrTotal) * 100;
-            double gtrP = Convert.ToDouble(gtr) / Convert.ToDouble(nbrTotal) * 100;
-            double gpmcP = Convert.ToDouble(gpmc) / Convert.ToDouble(nbrTotal) * 100;
-            double indusP = Convert.ToDouble(indus) / Convert.ToDouble(nbrTotal) * 100;
+                 return View();
+             }
+             else
+                 return RedirectToAction("Authentification", "User");
+         }
 
 
-            string[] vx = { "info", "indus", "gtr", "gpmc" };
-            double[] vy = { infoP, indusP, gtrP, gpmcP };
+         public IActionResult Statistiques()
+         {
+             return View();
+         }
+         [HttpGet]
+         public JsonResult PopulationChart()
+         {
+             var populationList = ListStatic.GetCityPopulationList();
+             return Json(populationList);
+         }*/
 
-
-            return null;
-        }
 
 
         [HttpPost]

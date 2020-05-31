@@ -48,8 +48,9 @@
                             <p>Bienvenue </p>
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Modification">
                             <i class="material-icons" style="color:#061323">
                                 supervised_user_circle
                             </i>
@@ -57,7 +58,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Visualiser">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
                             <i class="material-icons" style="color:#061323">
                                 theaters
                             </i>
@@ -65,33 +66,34 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="ImporterEtudiants">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
                             <i class="material-icons" style="color:#061323">view_module</i>
                             <p>Importer les Etudiants</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="ImporterNotes">
+                        <a class="nav-link" asp-area="" asp-controller="StackedChart" asp-action="Index">
+                            <i class="material-icons" style="color:#061323">chart</i>
+                            <p>Les Statistiques</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
                             <i class="material-icons" style="color:#061323">library_books</i>
                             <p>Importer les notes</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Statistiques">
-                            <i class="material-icons" style="color:#061323">timeline</i>
-                            <p>Statistiques</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="AttributionFiliere">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
                             <i class="material-icons" style="color:#061323">touch_app</i>
                             <p>Attribution des filieres</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Corbeille">
+                        <a class="nav-link" asp-area="" asp-controller="Departement" asp-action="Index">
                             <i class="material-icons" style="color:#061323">delete</i>
                             <p>Corbeille</p>
+
                         </a>
                     </li>
                     <li class="nav-item">
@@ -106,7 +108,6 @@
                             <p>Se deconnecter</p>
                         </a>
                     </li>
-
                 </ul>
 
 
@@ -123,20 +124,6 @@
                         @using (Html.BeginForm("Search", "Departement", FormMethod.Post, new { @class = "navbar-form", enctype = "multipart/form-data" }))
                         {
                             <div class="input-group no-border">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    @Html.RadioButton("searchBy", "Name", true) <text>Nom</text>
-
-                                </div>
-
-                                <!-- Default inline 2-->
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    @Html.RadioButton("searchBy", "cin") <text>CIN</text>
-                                </div>
-
-                                <!-- Default inline 3-->
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    @Html.RadioButton("searchBy", "cne") <text>CNE</text>
-                                </div>
                                 <input name="cne" type="text" value="" class="form-control" placeholder="Search..." style="color:black">
                                 <button type="submit" class="btn btn-default btn-round btn-just-icon">
                                     <i class="material-icons" style="color:black">search</i>
@@ -144,7 +131,7 @@
                                 </button>
                             </div>
                         }
-                    </div>                        
+                    </div>
                 </div>
             </nav>
             <!-- End Navbar -->
