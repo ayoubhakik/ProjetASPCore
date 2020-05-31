@@ -232,12 +232,12 @@ namespace ProjetASPCore.Controllers
 
                 if (e == null)
                 {
-                    ViewBag.message = "Les informations que vous avez entrez ne correspondent à aucun étudiant !";
+                    ViewBag.message = "Les informations que vous avez entrez ne correspondent a aucun etudiant !";
                     return View(plain);
                 }
                 else if (e.Validated == true)
                 {
-                    ViewBag.message = "Cet étudiant est déjà inscrit.";
+                    ViewBag.message = "Cet etudiant est deja inscrit.";
                     return View(plain);
                 }
                 else
