@@ -731,6 +731,9 @@ namespace ProjetASPCore.Controllers
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Users");
+                
+                worksheet.Columns().Width = 15;
+
                 var currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "Nom";
                 worksheet.Cell(currentRow, 2).Value = "Prenom";
@@ -792,12 +795,15 @@ namespace ProjetASPCore.Controllers
                     worksheet.Cell(rowIndex, 2).Value = student.prenom;
                     worksheet.Cell(rowIndex, 3).Value = student.cin;
                     worksheet.Cell(rowIndex, 4).Value = student.cne;
+                    worksheet.Cell(rowIndex, 4).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.Integer);
                     worksheet.Cell(rowIndex, 5).Value = student.email;
                     worksheet.Cell(rowIndex, 6).Value = student.dateNaiss;
                     worksheet.Cell(rowIndex, 7).Value = student.lieuNaiss;
                     worksheet.Cell(rowIndex, 8).Value = student.nationalite;
                     worksheet.Cell(rowIndex, 9).Value = student.gsm;
+                    worksheet.Cell(rowIndex, 9).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.Integer);
                     worksheet.Cell(rowIndex, 10).Value = student.phone;
+                    worksheet.Cell(rowIndex, 10).Style.NumberFormat.SetNumberFormatId((int)XLPredefinedFormat.Number.Integer);
                     worksheet.Cell(rowIndex, 11).Value = student.address;
                     worksheet.Cell(rowIndex, 12).Value = student.ville;
                     worksheet.Cell(rowIndex, 13).Value = student.typeBac;

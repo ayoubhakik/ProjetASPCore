@@ -17,7 +17,7 @@ namespace ProjetASPCore.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer
-                ("Server=YURI205B\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
+                ("Server=SIFANE-MOUAD\\SQLEXPRESS;Database=ProjetASPCore;Trusted_Connection=True;");
         }
     }
 }

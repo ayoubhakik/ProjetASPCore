@@ -191,22 +191,23 @@ namespace ProjetASPCore.Controllers
             EtudiantContext db = new EtudiantContext();
             ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
             ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
-            ViewBag.typeBac = new List<SelectListItem>
+            var BacTypes = new List<SelectListItem>
             {
-                new SelectListItem {Text="Sciences Physiques et Chimiques", Value="1" },
-                new SelectListItem {Text="Sciences Maths A", Value="2" },
-                new SelectListItem {Text="Sciences Maths B", Value="3" },
-                new SelectListItem {Text="Sciences et Technologies Electriques", Value="4" },
-                new SelectListItem {Text="Sciences et Technologies Mécaniques", Value="5" }
+                new SelectListItem {Text="Sciences Physiques et Chimiques", Value="0" },
+                new SelectListItem {Text="Sciences Maths A", Value="1" },
+                new SelectListItem {Text="Sciences Maths B", Value="2" },
+                new SelectListItem {Text="Sciences et Technologies Electriques", Value="3" },
+                new SelectListItem {Text="Sciences et Technologies Mécaniques", Value="4" }
             };
-            ViewBag.mentionBac = new List<SelectListItem>
+            ViewBag.typeBac = BacTypes;
+            var BacMention= new List<SelectListItem>
             {
-                new SelectListItem {Text="Passable", Value="1" },
-                new SelectListItem {Text="Assez bien", Value="2" },
-                new SelectListItem {Text="Bien", Value="3" },
-                new SelectListItem {Text="Très bien", Value="4" },
+                new SelectListItem {Text="Passable", Value="0" },
+                new SelectListItem {Text="Assez bien", Value="1" },
+                new SelectListItem {Text="Bien", Value="2" },
+                new SelectListItem {Text="Très bien", Value="3" },
             };
-
+            ViewBag.mentionBac = BacMention;
             if (ModelState.IsValid)
             {
                 var e = etudiantContext.Etudiants.Where(x => x.cne == student.cne && x.nom == student.nom && x.prenom == student.prenom).FirstOrDefault();
@@ -231,10 +232,10 @@ namespace ProjetASPCore.Controllers
                     e.gsm = student.gsm;
                     e.address = student.address;
                     e.ville = student.ville;
-                    e.typeBac = student.typeBac;
+                    e.typeBac = BacTypes.ElementAt(Convert.ToInt32(student.typeBac)).Text;
                     e.anneeBac = student.anneeBac;
                     e.noteBac = student.noteBac;
-                    e.mentionBac = student.mentionBac;
+                    e.mentionBac = BacMention.ElementAt(Convert.ToInt32(student.mentionBac)).Text;
                     e.dateNaiss = student.dateNaiss;
                     e.lieuNaiss = student.lieuNaiss;
                     e.Choix = choix1 + choix2 + choix3;

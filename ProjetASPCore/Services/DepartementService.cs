@@ -13,6 +13,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 namespace ProjetASPCore.Services
 {
@@ -394,8 +395,10 @@ namespace ProjetASPCore.Services
             worksheet.Cells[1, 2].Value = "Prenom";
             worksheet.Cells[1, 3].Value = "CIN";
             worksheet.Cells[1, 4].Value = "CNE";
+            worksheet.Cells[2,4].Style.Numberformat.Format = "0.0";
             worksheet.Cells[1, 5].Value = "Email";
             worksheet.Cells[1, 6].Value = "Date de naissance";
+            worksheet.Cells[2,6].Style.Numberformat.Format = "dd.MM.yyyy";
             worksheet.Cells[1, 7].Value = "Lieu de naissance";
             worksheet.Cells[1, 8].Value = "Nationalite";
             worksheet.Cells[1, 9].Value = "GSM";
@@ -451,13 +454,14 @@ namespace ProjetASPCore.Services
                 worksheet.Cells[rowIndex, 1].Value = student.nom;
                 worksheet.Cells[rowIndex, 2].Value = student.prenom;
                 worksheet.Cells[rowIndex, 3].Value = student.cin;
-                worksheet.Cells[rowIndex, 4].Value = student.cne;
+                worksheet.Cells[rowIndex, 4].Value = Convert.ToInt32(student.cne);
                 worksheet.Cells[rowIndex, 5].Value = student.email;
                 worksheet.Cells[rowIndex, 6].Value = student.dateNaiss;
                 worksheet.Cells[rowIndex, 7].Value = student.lieuNaiss;
                 worksheet.Cells[rowIndex, 8].Value = student.nationalite;
-                worksheet.Cells[rowIndex, 9].Value = student.gsm;
-                worksheet.Cells[rowIndex, 10].Value = student.phone;
+                worksheet.Cells[rowIndex, 9].Value = Convert.ToInt32(student.gsm);
+                worksheet.Cells[rowIndex, 9].Style.Numberformat.Format = "0";
+                worksheet.Cells[rowIndex, 10].Value = Convert.ToInt32(student.phone);
                 worksheet.Cells[rowIndex, 11].Value = student.address;
                 worksheet.Cells[rowIndex, 12].Value = student.ville;
                 worksheet.Cells[rowIndex, 13].Value = student.typeBac;
