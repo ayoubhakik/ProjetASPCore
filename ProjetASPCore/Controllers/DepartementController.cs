@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
-
+using ClosedXML.Excel;
 
 namespace ProjetASPCore.Controllers
 {
@@ -597,125 +597,125 @@ namespace ProjetASPCore.Controllers
         [HttpGet]
         public void ExportExcel()
         {
-            string[] choixTab = new string[3];
-            string choixAffecte;
+            /* string[] choixTab = new string[3];
+             string choixAffecte;
 
-            //Données à exporter
-            EtudiantContext students = new EtudiantContext();
+             //Données à exporter
+             EtudiantContext students = new EtudiantContext();
 
-            //Création de la page excel
-            ExcelPackage excel = new ExcelPackage();
-            ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("Sheet1");
+             //Création de la page excel
+             ExcelPackage excel = new ExcelPackage();
+             ExcelWorksheet worksheet = excel.Workbook.Worksheets.Add("Sheet1");
 
-            //Style des noms de colonnes
-            worksheet.Row(1).Style.Font.Bold = true;
-            worksheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+             //Style des noms de colonnes
+             worksheet.Row(1).Style.Font.Bold = true;
+             worksheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            //Noms des colonnes
-            worksheet.Cells[1, 1].Value = "Nom";
-            worksheet.Cells[1, 2].Value = "Prenom";
-            worksheet.Cells[1, 3].Value = "CIN";
-            worksheet.Cells[1, 4].Value = "CNE";
-            worksheet.Cells[1, 5].Value = "Email";
-            worksheet.Cells[1, 6].Value = "Date de naissance";
-            worksheet.Cells[1, 7].Value = "Lieu de naissance";
-            worksheet.Cells[1, 8].Value = "Nationalite";
-            worksheet.Cells[1, 9].Value = "GSM";
-            worksheet.Cells[1, 10].Value = "Tel fixe";
-            worksheet.Cells[1, 11].Value = "Adresse";
-            worksheet.Cells[1, 12].Value = "Ville";
-            worksheet.Cells[1, 13].Value = "Type de bac";
-            worksheet.Cells[1, 14].Value = "Annee de bac";
-            worksheet.Cells[1, 15].Value = "Note de bac";
-            worksheet.Cells[1, 16].Value = "Note de premiere annee";
-            worksheet.Cells[1, 17].Value = "Note de deuxieme annee";
-            worksheet.Cells[1, 18].Value = "Premier Choix";
-            worksheet.Cells[1, 19].Value = "Deuxieme Choix";
-            worksheet.Cells[1, 20].Value = "Troisieme Choix";
-            worksheet.Cells[1, 21].Value = "Filiere affectee";
-            worksheet.Cells[1, 22].Value = "Redoublant";
+             //Noms des colonnes
+             worksheet.Cells[1, 1].Value = "Nom";
+             worksheet.Cells[1, 2].Value = "Prenom";
+             worksheet.Cells[1, 3].Value = "CIN";
+             worksheet.Cells[1, 4].Value = "CNE";
+             worksheet.Cells[1, 5].Value = "Email";
+             worksheet.Cells[1, 6].Value = "Date de naissance";
+             worksheet.Cells[1, 7].Value = "Lieu de naissance";
+             worksheet.Cells[1, 8].Value = "Nationalite";
+             worksheet.Cells[1, 9].Value = "GSM";
+             worksheet.Cells[1, 10].Value = "Tel fixe";
+             worksheet.Cells[1, 11].Value = "Adresse";
+             worksheet.Cells[1, 12].Value = "Ville";
+             worksheet.Cells[1, 13].Value = "Type de bac";
+             worksheet.Cells[1, 14].Value = "Annee de bac";
+             worksheet.Cells[1, 15].Value = "Note de bac";
+             worksheet.Cells[1, 16].Value = "Note de premiere annee";
+             worksheet.Cells[1, 17].Value = "Note de deuxieme annee";
+             worksheet.Cells[1, 18].Value = "Premier Choix";
+             worksheet.Cells[1, 19].Value = "Deuxieme Choix";
+             worksheet.Cells[1, 20].Value = "Troisieme Choix";
+             worksheet.Cells[1, 21].Value = "Filiere affectee";
+             worksheet.Cells[1, 22].Value = "Redoublant";
 
-            //Remplissage des cellules
-            int rowIndex = 2;
-            foreach (var student in departementService.students())
-            {
+             //Remplissage des cellules
+             int rowIndex = 2;
+             foreach (var student in departementService.students())
+             {
 
-                //Separation des choix
-                if (student.Validated)
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        switch (student.Choix.ToCharArray()[i])
-                        {
-                            case 'F':
-                                choixTab[i] = "Informatique";
-                                break;
-                            case 'D':
-                                choixTab[i] = "Industriel";
-                                break;
-                            case 'T':
-                                choixTab[i] = "Reseau et telecom";
-                                break;
-                            case 'P':
-                                choixTab[i] = "Procedes";
-                                break;
-                        }
-                    }
-                }
-                if (student.idFil != null)
-                {
-                    choixAffecte = students.Filieres.Find(student.idFil).nomFil;
-                    worksheet.Cells[rowIndex, 21].Value = choixAffecte;
-                }
-                else
-                    worksheet.Cells[rowIndex, 21].Value = null;
+                 //Separation des choix
+                 if (student.Validated)
+                 {
+                     for (int i = 0; i < 3; i++)
+                     {
+                         switch (student.Choix.ToCharArray()[i])
+                         {
+                             case 'F':
+                                 choixTab[i] = "Informatique";
+                                 break;
+                             case 'D':
+                                 choixTab[i] = "Industriel";
+                                 break;
+                             case 'T':
+                                 choixTab[i] = "Reseau et telecom";
+                                 break;
+                             case 'P':
+                                 choixTab[i] = "Procedes";
+                                 break;
+                         }
+                     }
+                 }
+                 if (student.idFil != null)
+                 {
+                     choixAffecte = students.Filieres.Find(student.idFil).nomFil;
+                     worksheet.Cells[rowIndex, 21].Value = choixAffecte;
+                 }
+                 else
+                     worksheet.Cells[rowIndex, 21].Value = null;
 
-                worksheet.Cells[rowIndex, 1].Value = student.nom;
-                worksheet.Cells[rowIndex, 2].Value = student.prenom;
-                worksheet.Cells[rowIndex, 3].Value = student.cin;
-                worksheet.Cells[rowIndex, 4].Value = student.cne;
-                worksheet.Cells[rowIndex, 5].Value = student.email;
-                worksheet.Cells[rowIndex, 6].Value = student.dateNaiss;
-                worksheet.Cells[rowIndex, 7].Value = student.lieuNaiss;
-                worksheet.Cells[rowIndex, 8].Value = student.nationalite;
-                worksheet.Cells[rowIndex, 9].Value = student.gsm;
-                worksheet.Cells[rowIndex, 10].Value = student.phone;
-                worksheet.Cells[rowIndex, 11].Value = student.address;
-                worksheet.Cells[rowIndex, 12].Value = student.ville;
-                worksheet.Cells[rowIndex, 13].Value = student.typeBac;
-                worksheet.Cells[rowIndex, 14].Value = student.anneeBac;
-                worksheet.Cells[rowIndex, 15].Value = student.noteBac;
-                worksheet.Cells[rowIndex, 16].Value = student.noteFstYear;
-                worksheet.Cells[rowIndex, 17].Value = student.noteSndYear;
-                worksheet.Cells[rowIndex, 18].Value = choixTab[0];
-                worksheet.Cells[rowIndex, 19].Value = choixTab[1];
-                worksheet.Cells[rowIndex, 20].Value = choixTab[2];
-                if (student.Redoubler)
-                    worksheet.Cells[rowIndex, 22].Value = "Oui";
-                worksheet.Cells[rowIndex, 22].Value = "";
-
-
-                rowIndex++;
+                 worksheet.Cells[rowIndex, 1].Value = student.nom;
+                 worksheet.Cell(currentRow, 1).Value = student.prenom;
+                 worksheet.Cells[rowIndex, 3].Value = student.cin;
+                 worksheet.Cells[rowIndex, 4].Value = student.cne;
+                 worksheet.Cells[rowIndex, 5].Value = student.email;
+                 worksheet.Cells[rowIndex, 6].Value = student.dateNaiss;
+                 worksheet.Cells[rowIndex, 7].Value = student.lieuNaiss;
+                 worksheet.Cells[rowIndex, 8].Value = student.nationalite;
+                 worksheet.Cells[rowIndex, 9].Value = student.gsm;
+                 worksheet.Cells[rowIndex, 10].Value = student.phone;
+                 worksheet.Cells[rowIndex, 11].Value = student.address;
+                 worksheet.Cells[rowIndex, 12].Value = student.ville;
+                 worksheet.Cells[rowIndex, 13].Value = student.typeBac;
+                 worksheet.Cells[rowIndex, 14].Value = student.anneeBac;
+                 worksheet.Cells[rowIndex, 15].Value = student.noteBac;
+                 worksheet.Cells[rowIndex, 16].Value = student.noteFstYear;
+                 worksheet.Cells[rowIndex, 17].Value = student.noteSndYear;
+                 worksheet.Cells[rowIndex, 18].Value = choixTab[0];
+                 worksheet.Cells[rowIndex, 19].Value = choixTab[1];
+                 worksheet.Cells[rowIndex, 20].Value = choixTab[2];
+                 if (student.Redoubler)
+                     worksheet.Cells[rowIndex, 22].Value = "Oui";
+                 worksheet.Cells[rowIndex, 22].Value = "";
 
 
-            }
-            /*
-            //Envoi du fichier dans par http
-            using (var memoryStream = new MemoryStream())
-            {
-                Response.Clear();
-                Response.ClearContent();
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
-                excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.Clear();
-                Response.End();
-            }
-            */
+                 rowIndex++;
 
 
+             }
+             /*
+             //Envoi du fichier dans par http
+             using (var memoryStream = new MemoryStream())
+             {
+                 Response.Clear();
+                 Response.ClearContent();
+                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                 Response.AddHeader("content-disposition", "attachment; filename=testing.xlsx");
+                 excel.SaveAs(memoryStream);
+                 memoryStream.WriteTo(Response.OutputStream);
+                 Response.Flush();
+                 Response.Clear();
+                 Response.End();
+             }
+             */
+
+          
         }
 
 
@@ -723,8 +723,108 @@ namespace ProjetASPCore.Controllers
         [HttpGet]
         public IActionResult ExportExcelAttributed()
         {
+            string[] choixTab = new string[3];
+            string choixAffecte;
+            EtudiantContext students = new EtudiantContext();
             //Données à exporter
-            return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
+            // return File(departementService.ExportExcelAttributed(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "listeAttribution.xlsx");
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Users");
+                var currentRow = 1;
+                worksheet.Cell(currentRow, 1).Value = "Nom";
+                worksheet.Cell(currentRow, 2).Value = "Prenom";
+                worksheet.Cell(currentRow, 3).Value = "CIN";
+                worksheet.Cell(currentRow, 4).Value = "CNE";
+                worksheet.Cell(currentRow, 5).Value = "Email";
+                worksheet.Cell(currentRow, 6).Value = "Date de naissance";
+                worksheet.Cell(currentRow, 7).Value = "Lieu de naissance";
+                worksheet.Cell(currentRow, 8).Value = "Nationalite";
+                worksheet.Cell(currentRow, 9).Value = "GSM";
+                worksheet.Cell(currentRow, 10).Value = "Tel fixe";
+                worksheet.Cell(currentRow, 11).Value = "Adresse";
+                worksheet.Cell(currentRow, 12).Value = "Ville";
+                worksheet.Cell(currentRow, 13).Value = "Type de bac";
+                worksheet.Cell(currentRow, 14).Value = "Annee de bac";
+                worksheet.Cell(currentRow, 15).Value = "Note de bac";
+                worksheet.Cell(currentRow, 16).Value = "Note de premiere annee";
+                worksheet.Cell(currentRow, 17).Value = "Note de deuxieme annee";
+                worksheet.Cell(currentRow, 18).Value = "Premier Choix";
+                worksheet.Cell(currentRow, 19).Value = "Deuxieme Choix";
+                worksheet.Cell(currentRow, 20).Value = "Troisieme Choix";
+                worksheet.Cell(currentRow, 21).Value = "Filiere affectee";
+                worksheet.Cell(currentRow, 22).Value = "Redoublant";
+                int rowIndex = 1;
+                foreach (var student in departementService.students())
+                {
+                    rowIndex++;
+                    if (student.Validated)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            switch (student.Choix.ToCharArray()[i])
+                            {
+                                case 'F':
+                                    choixTab[i] = "Informatique";
+                                    break;
+                                case 'D':
+                                    choixTab[i] = "Industriel";
+                                    break;
+                                case 'T':
+                                    choixTab[i] = "Reseau et telecom";
+                                    break;
+                                case 'P':
+                                    choixTab[i] = "Procedes";
+                                    break;
+                            }
+                        }
+                    }
+                    if (student.idFil != null)
+                    {
+                        choixAffecte = students.Filieres.Find(student.idFil).nomFil;
+                        worksheet.Cell(rowIndex , 21).Value = choixAffecte;
+                    }
+                    else
+                        worksheet.Cell(rowIndex, 21).Value = null;
+                    
+
+                   worksheet.Cell(rowIndex, 1).Value = student.nom;
+                    worksheet.Cell(rowIndex, 2).Value = student.prenom;
+                    worksheet.Cell(rowIndex, 3).Value = student.cin;
+                    worksheet.Cell(rowIndex, 4).Value = student.cne;
+                    worksheet.Cell(rowIndex, 5).Value = student.email;
+                    worksheet.Cell(rowIndex, 6).Value = student.dateNaiss;
+                    worksheet.Cell(rowIndex, 7).Value = student.lieuNaiss;
+                    worksheet.Cell(rowIndex, 8).Value = student.nationalite;
+                    worksheet.Cell(rowIndex, 9).Value = student.gsm;
+                    worksheet.Cell(rowIndex, 10).Value = student.phone;
+                    worksheet.Cell(rowIndex, 11).Value = student.address;
+                    worksheet.Cell(rowIndex, 12).Value = student.ville;
+                    worksheet.Cell(rowIndex, 13).Value = student.typeBac;
+                    worksheet.Cell(rowIndex, 14).Value = student.anneeBac;
+                    worksheet.Cell(rowIndex, 15).Value = student.noteBac;
+                    worksheet.Cell(rowIndex, 16).Value = student.noteFstYear;
+                    worksheet.Cell(rowIndex, 17).Value = student.noteSndYear;
+                    worksheet.Cell(rowIndex, 18).Value = choixTab[0];
+                    worksheet.Cell(rowIndex, 19).Value = choixTab[1];
+                    worksheet.Cell(rowIndex, 20).Value = choixTab[2];
+                    if (student.Redoubler)
+                        worksheet.Cell(rowIndex, 22).Value = "Oui";
+                        worksheet.Cell(rowIndex, 23).Value = "";
+
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(
+                        content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "users.xlsx");
+                }
+            }
         }
 
 
@@ -744,17 +844,21 @@ namespace ProjetASPCore.Controllers
         }
         //pour Imprimer le pdf
 
-        public ActionResult PrintConsultation()
+        public IActionResult PrintConsultation()
         {
 
-            var q = new ViewAsPdf("ImprimerEtudiant", departementService.students());
+            var report = new ViewAsPdf("ImprimerEtudiant", departementService.students())
+            {
+                PageMargins = { Left = 20, Bottom = 20, Right = 20, Top = 20 },
+            };
+            
 
             var h = HttpContext.Session.GetInt32("userId");
             var h1 = HttpContext.Session.GetString("role");
 
             if (h != null && h1.Equals("Departement"))
             {
-                return q;
+                return report;
             }
             else
             {

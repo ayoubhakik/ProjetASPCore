@@ -41,11 +41,12 @@ namespace ProjetASPCore.Controllers
    
         IHostingEnvironment _env;
 
-        public EtudiantController(IEtudiantService etudiantService,IHostingEnvironment environment)
+        public EtudiantController(IEtudiantService etudiantService,IHostingEnvironment environment, IConfiguration configuration)
         {
             _env = environment;
             this.etudiantService = etudiantService;
-         
+            _configuration = configuration;
+
         }
 
 
@@ -128,7 +129,7 @@ namespace ProjetASPCore.Controllers
             return View(etudiant);
             
         }
-        public ActionResult Recu()
+        public IActionResult Recu()
         {
             ViewBag.Current = "Consulter";
             Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
