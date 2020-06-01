@@ -70,7 +70,7 @@ namespace ProjetASPCore
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=User}/{action=Authentification}/{id?}");
             });
 
             RotativaConfiguration.Setup(env);

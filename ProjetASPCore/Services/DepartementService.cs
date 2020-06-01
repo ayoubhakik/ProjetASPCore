@@ -339,7 +339,7 @@ namespace ProjetASPCore.Services
                        // Json(Result, new Newtonsoft.Json.JsonSerializerSettings());
                     }
                 }
-
+                
 
             }
         }
