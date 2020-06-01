@@ -71,6 +71,7 @@ namespace ProjetASPCore.Controllers
         //Modification 
         public IActionResult Modification()
         {
+           
             ViewBag.Current = "Modification";
             ViewBag.err = "";
           
@@ -78,9 +79,16 @@ namespace ProjetASPCore.Controllers
              {
                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
              }*/
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
 
-            return View(etudiant);
+                return View(etudiant);
+            }
+            else
+            {
+               return RedirectToAction("Authentification1",User);
+            }
         }
  
      
@@ -124,30 +132,54 @@ namespace ProjetASPCore.Controllers
         {
             ViewBag.Current = "Consulter";
 
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
 
-            return View(etudiant);
-            
+                return View(etudiant);
+            }
+            else
+            {
+               return RedirectToAction("Authentification1", User);
+            }
         }
         public IActionResult Recu()
         {
             ViewBag.Current = "Consulter";
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
-
-            return new ViewAsPdf("Recu",etudiant);
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
+                return new ViewAsPdf("Recu", etudiant);
+            }else
+                return RedirectToAction("Authentification1", User);
 
 
         }
 
         public ActionResult Deconnecter()
         {
-            HttpContext.Session.Remove("userId");
             HttpContext.Session.Remove("cin");
+            HttpContext.Session.Remove("userId");
             HttpContext.Session.Remove("nom");
-            HttpContext.Session.Remove("cne");
             HttpContext.Session.Remove("prenom");
+            /* Session["nationalite"] = userLogin.nationalite;
+             Session["email"] = userLogin.email;
+             Session["phone"] = userLogin.phone;
+             Session["gsm"] = userLogin.gsm;
+             Session["address"] = userLogin.address;
+             Session["ville"] = userLogin.ville;
+             Session["typeBac"] = userLogin.prenom;
+             Session["anneeBac"] = userLogin.anneeBac;
+             Session["noteBac"] = userLogin.noteBac;
+             Session["mentionBac"] = userLogin.mentionBac;
+             Session["noteFstYear"] = userLogin.noteFstYear;
+             Session["noteSndYear"] = userLogin.noteSndYear;
+             Session["dateNaiss"] = userLogin.dateNaiss;
+             Session["lieuNaiss"] = userLogin.lieuNaiss;
+             Session["photo_link"] = userLogin.photo_link;
+             Session["choix"] = userLogin.choix;*/
             HttpContext.Session.Remove("role");
-           return RedirectToAction("Authentification1", "User");
+            return RedirectToAction("Authentification1", "User");
 
         }
 
