@@ -151,7 +151,7 @@ namespace ProjetASPCore.Services
         {
             try
             {
-                Etudiant etudiants = FindEtudiant("R132580560");
+                Etudiant etudiants = FindEtudiant(etudiant.cne);
                 
                 if(file!=null && file.Length > 0 && Update== "Upload")
                 {

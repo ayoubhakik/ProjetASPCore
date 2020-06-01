@@ -71,6 +71,7 @@ namespace ProjetASPCore.Controllers
         //Modification 
         public IActionResult Modification()
         {
+           
             ViewBag.Current = "Modification";
             ViewBag.err = "";
           
@@ -78,9 +79,16 @@ namespace ProjetASPCore.Controllers
              {
                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
              }*/
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
 
-            return View(etudiant);
+                return View(etudiant);
+            }
+            else
+            {
+               return RedirectToAction("Authentification1",User);
+            }
         }
  
      
@@ -124,30 +132,54 @@ namespace ProjetASPCore.Controllers
         {
             ViewBag.Current = "Consulter";
 
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
 
-            return View(etudiant);
-            
+                return View(etudiant);
+            }
+            else
+            {
+               return RedirectToAction("Authentification1", User);
+            }
         }
         public IActionResult Recu()
         {
             ViewBag.Current = "Consulter";
-            Etudiant etudiant = etudiantService.FindEtudiant("R132580560");
-
-            return new ViewAsPdf("Recu",etudiant);
+            Etudiant etudiant = etudiantService.FindEtudiant(HttpContext.Session.GetString("userId"));
+            if (etudiant != null)
+            {
+                return new ViewAsPdf("Recu", etudiant);
+            }else
+                return RedirectToAction("Authentification1", User);
 
 
         }
 
         public ActionResult Deconnecter()
         {
-            HttpContext.Session.Remove("userId");
             HttpContext.Session.Remove("cin");
+            HttpContext.Session.Remove("userId");
             HttpContext.Session.Remove("nom");
-            HttpContext.Session.Remove("cne");
             HttpContext.Session.Remove("prenom");
+            /* Session["nationalite"] = userLogin.nationalite;
+             Session["email"] = userLogin.email;
+             Session["phone"] = userLogin.phone;
+             Session["gsm"] = userLogin.gsm;
+             Session["address"] = userLogin.address;
+             Session["ville"] = userLogin.ville;
+             Session["typeBac"] = userLogin.prenom;
+             Session["anneeBac"] = userLogin.anneeBac;
+             Session["noteBac"] = userLogin.noteBac;
+             Session["mentionBac"] = userLogin.mentionBac;
+             Session["noteFstYear"] = userLogin.noteFstYear;
+             Session["noteSndYear"] = userLogin.noteSndYear;
+             Session["dateNaiss"] = userLogin.dateNaiss;
+             Session["lieuNaiss"] = userLogin.lieuNaiss;
+             Session["photo_link"] = userLogin.photo_link;
+             Session["choix"] = userLogin.choix;*/
             HttpContext.Session.Remove("role");
-           return RedirectToAction("Authentification1", "User");
+            return RedirectToAction("Authentification1", "User");
 
         }
 
@@ -191,22 +223,23 @@ namespace ProjetASPCore.Controllers
             EtudiantContext db = new EtudiantContext();
             ViewBag.Delai = db.Settings.FirstOrDefault().Delai;
             ViewBag.DatedeRappel = db.Settings.FirstOrDefault().DatedeRappel;
-            ViewBag.typeBac = new List<SelectListItem>
+            var BacTypes = new List<SelectListItem>
             {
-                new SelectListItem {Text="Sciences Physiques et Chimiques", Value="1" },
-                new SelectListItem {Text="Sciences Maths A", Value="2" },
-                new SelectListItem {Text="Sciences Maths B", Value="3" },
-                new SelectListItem {Text="Sciences et Technologies Electriques", Value="4" },
-                new SelectListItem {Text="Sciences et Technologies Mécaniques", Value="5" }
+                new SelectListItem {Text="Sciences Physiques et Chimiques", Value="0" },
+                new SelectListItem {Text="Sciences Maths A", Value="1" },
+                new SelectListItem {Text="Sciences Maths B", Value="2" },
+                new SelectListItem {Text="Sciences et Technologies Electriques", Value="3" },
+                new SelectListItem {Text="Sciences et Technologies Mécaniques", Value="4" }
             };
-            ViewBag.mentionBac = new List<SelectListItem>
+            ViewBag.typeBac = BacTypes;
+            var BacMention= new List<SelectListItem>
             {
-                new SelectListItem {Text="Passable", Value="1" },
-                new SelectListItem {Text="Assez bien", Value="2" },
-                new SelectListItem {Text="Bien", Value="3" },
-                new SelectListItem {Text="Très bien", Value="4" },
+                new SelectListItem {Text="Passable", Value="0" },
+                new SelectListItem {Text="Assez bien", Value="1" },
+                new SelectListItem {Text="Bien", Value="2" },
+                new SelectListItem {Text="Très bien", Value="3" },
             };
-
+            ViewBag.mentionBac = BacMention;
             if (ModelState.IsValid)
             {
                 var e = etudiantContext.Etudiants.Where(x => x.cne == student.cne && x.nom == student.nom && x.prenom == student.prenom).FirstOrDefault();
@@ -231,10 +264,10 @@ namespace ProjetASPCore.Controllers
                     e.gsm = student.gsm;
                     e.address = student.address;
                     e.ville = student.ville;
-                    e.typeBac = student.typeBac;
+                    e.typeBac = BacTypes.ElementAt(Convert.ToInt32(student.typeBac)).Text;
                     e.anneeBac = student.anneeBac;
                     e.noteBac = student.noteBac;
-                    e.mentionBac = student.mentionBac;
+                    e.mentionBac = BacMention.ElementAt(Convert.ToInt32(student.mentionBac)).Text;
                     e.dateNaiss = student.dateNaiss;
                     e.lieuNaiss = student.lieuNaiss;
                     e.Choix = choix1 + choix2 + choix3;
