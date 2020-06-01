@@ -731,7 +731,7 @@ namespace ProjetASPCore.Controllers
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Users");
-                
+
                 worksheet.Columns().Width = 15;
 
                 var currentRow = 1;
@@ -785,13 +785,13 @@ namespace ProjetASPCore.Controllers
                     if (student.idFil != null)
                     {
                         choixAffecte = students.Filieres.Find(student.idFil).nomFil;
-                        worksheet.Cell(rowIndex , 21).Value = choixAffecte;
+                        worksheet.Cell(rowIndex, 21).Value = choixAffecte;
                     }
                     else
                         worksheet.Cell(rowIndex, 21).Value = null;
-                    
 
-                   worksheet.Cell(rowIndex, 1).Value = student.nom;
+
+                    worksheet.Cell(rowIndex, 1).Value = student.nom;
                     worksheet.Cell(rowIndex, 2).Value = student.prenom;
                     worksheet.Cell(rowIndex, 3).Value = student.cin;
                     worksheet.Cell(rowIndex, 4).Value = student.cne;
@@ -816,7 +816,7 @@ namespace ProjetASPCore.Controllers
                     worksheet.Cell(rowIndex, 20).Value = choixTab[2];
                     if (student.Redoubler)
                         worksheet.Cell(rowIndex, 22).Value = "Oui";
-                        worksheet.Cell(rowIndex, 23).Value = "";
+                    worksheet.Cell(rowIndex, 23).Value = "";
 
                 }
 
@@ -832,7 +832,6 @@ namespace ProjetASPCore.Controllers
                 }
             }
         }
-
 
         public ActionResult Visualiser()
         {

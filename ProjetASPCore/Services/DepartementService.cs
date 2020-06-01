@@ -529,10 +529,11 @@ namespace ProjetASPCore.Services
                     worksheet.Cells[rowIndex, 2].Value = student.prenom;
                     worksheet.Cells[rowIndex, 3].Value = student.cin;
                     worksheet.Cells[rowIndex, 4].Value = student.cne;
+                    rowIndex++;
                 }
 
 
-                rowIndex++;
+                
 
 
             }
