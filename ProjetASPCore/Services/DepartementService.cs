@@ -687,7 +687,8 @@ namespace ProjetASPCore.Services
 
         public List<Etudiant> students()
         {
-            return db.Etudiants.ToList();
+
+            return new EtudiantContext().Etudiants.ToList();
 
         }
 

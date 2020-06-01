@@ -136,7 +136,7 @@ namespace ProjetASPCore.Controllers
                 {
 
                     ViewBag.Current = "Index";
-
+                    departementService.SupprimerEtudiant(id);
                     return RedirectToAction("Index");
                 }
                 else return RedirectToAction("Authentification", "User");
@@ -155,9 +155,6 @@ namespace ProjetASPCore.Controllers
 
             if (h != null && h1.Equals("Departement"))
             {
-                EtudiantContext db = new EtudiantContext();
-
-
                 ViewBag.Current = "Corbeille";
 
                 return View(departementService.students());
@@ -368,6 +365,8 @@ namespace ProjetASPCore.Controllers
                             db.Settings.First().importNote = true;
 
                             db.SaveChanges();
+                            db.SaveChanges();
+
                             return RedirectToAction("Index");
                         }
                     }
