@@ -47,6 +47,32 @@ namespace ProjetASPCore.Context
             }
 
             );
-    }
+            modelBuilder.Entity<Filiere>().HasData(
+           new Filiere
+           {
+               idFil=1,
+               nomFil="informatique"
+
+           },
+             new Filiere
+             {
+                 idFil = 2,
+                 nomFil = "gtr"
+
+             },
+               new Filiere
+               {
+                   idFil = 3,
+                   nomFil = "Indus"
+
+               },
+                 new Filiere
+                 {
+                     idFil = 4,
+                     nomFil = "gpmc"
+
+                 }
+           );
+        }
 }
 }

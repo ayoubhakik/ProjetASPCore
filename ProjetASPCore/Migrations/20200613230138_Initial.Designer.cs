@@ -10,7 +10,7 @@ using ProjetASPCore.Context;
 namespace ProjetASPCore.Migrations
 {
     [DbContext(typeof(EtudiantContext))]
-    [Migration("20200613211628_Initial")]
+    [Migration("20200613230138_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,13 @@ namespace ProjetASPCore.Migrations
                     b.HasKey("idFil");
 
                     b.ToTable("Filieres");
+
+                    b.HasData(
+                        new { idFil = 1, nomFil = "informatique" },
+                        new { idFil = 2, nomFil = "gtr" },
+                        new { idFil = 3, nomFil = "Indus" },
+                        new { idFil = 4, nomFil = "gpmc" }
+                    );
                 });
 
             modelBuilder.Entity("ProjetASPCore.Models.Settings", b =>

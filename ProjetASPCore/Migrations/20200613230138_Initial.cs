@@ -102,6 +102,17 @@ namespace ProjetASPCore.Migrations
                 values: new object[] { 1, "assmaesafae20@gmail.com", "ENSA", "12345", "0600000000", "ENSA" });
 
             migrationBuilder.InsertData(
+                table: "Filieres",
+                columns: new[] { "idFil", "nomFil" },
+                values: new object[,]
+                {
+                    { 1, "informatique" },
+                    { 2, "gtr" },
+                    { 3, "Indus" },
+                    { 4, "gpmc" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "idSettings", "Attributted", "DatedeRappel", "Delai", "importEtudiant", "importNote" },
                 values: new object[] { 1, false, new DateTime(2020, 6, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), false, false });

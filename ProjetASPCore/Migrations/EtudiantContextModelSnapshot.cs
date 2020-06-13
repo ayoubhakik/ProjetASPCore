@@ -122,6 +122,13 @@ namespace ProjetASPCore.Migrations
                     b.HasKey("idFil");
 
                     b.ToTable("Filieres");
+
+                    b.HasData(
+                        new { idFil = 1, nomFil = "informatique" },
+                        new { idFil = 2, nomFil = "gtr" },
+                        new { idFil = 3, nomFil = "Indus" },
+                        new { idFil = 4, nomFil = "gpmc" }
+                    );
                 });
 
             modelBuilder.Entity("ProjetASPCore.Models.Settings", b =>
