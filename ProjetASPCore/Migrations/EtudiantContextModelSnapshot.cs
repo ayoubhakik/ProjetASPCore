@@ -15,7 +15,7 @@ namespace ProjetASPCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -38,6 +38,10 @@ namespace ProjetASPCore.Migrations
                     b.HasKey("id_departement");
 
                     b.ToTable("Departement");
+
+                    b.HasData(
+                        new { id_departement = 1, email = "assmaesafae20@gmail.com", nom_departement = "ENSA", password = "12345", phone = "0600000000", username = "ENSA" }
+                    );
                 });
 
             modelBuilder.Entity("ProjetASPCore.Models.Etudiant", b =>
@@ -139,6 +143,10 @@ namespace ProjetASPCore.Migrations
                     b.HasKey("idSettings");
 
                     b.ToTable("Settings");
+
+                    b.HasData(
+                        new { idSettings = 1, Attributted = false, DatedeRappel = new DateTime(2020, 6, 27, 0, 0, 0, 0, DateTimeKind.Unspecified), Delai = new DateTime(2020, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), importEtudiant = false, importNote = false }
+                    );
                 });
 
             modelBuilder.Entity("ProjetASPCore.Models.Etudiant", b =>
