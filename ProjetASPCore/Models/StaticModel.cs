@@ -7,7 +7,7 @@ namespace ProjetASPCore.Models
 {
     public class StaticModel
     {
-        public string Filiere { get; set; }
+        public string nomF { get; set; }
         public double nbr_stud { get; set; }
     }
 }

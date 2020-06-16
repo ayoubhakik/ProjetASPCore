@@ -1,17 +1,14 @@
 ﻿
 @{
-    /**/
-
-    /**/
+    ViewBag.Title = "";
     Layout = "~/Views/Shared/_DepartementLayout.cshtml";
 }
-<br />
-<br />
-<br/>
-<br />
-<title>@ViewData["Title"] - DemoGoogleChart</title>
+
+
+
+<title>@ViewData["Title"] - hhhhhhh</title>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div id="chart_div"></div>
+<div id="chart_div" style="position:relative;top:200px"></div>
 <script type="text/javascript">
     google.charts.load('current', {
         packages: ['corechart', 'bar']
@@ -19,7 +16,7 @@
     google.charts.setOnLoadCallback(LoadData);
     function LoadData() {
         $.ajax({
-            url: 'StackedChart/PopulationChart',
+            url: '/StackedChart/PopulationChart',
             dataType: "json",
             type: "GET",
             error: function (xhr, status, error) {
@@ -35,10 +32,10 @@
     }
     function PopulationChart(data) {
         var dataArray = [
-            ['Filiere', 'Nombre des Etudiants']
+            ['filiere', 'Nombre des Etudiants']
         ];
         $.each(data, function (i, item) {
-            dataArray.push([item.Filiere, item.nbr_stud]);
+            dataArray.push([item.nomF, item.nbr_stud]);
         });
         var data = google.visualization.arrayToDataTable(dataArray);
         var options = {
@@ -50,7 +47,7 @@
             },
             colors: ['#b0120a'],
             hAxis: {
-                title: 'FILIERE',
+                title: 'filiere',
                 minValue: 0
             },
             vAxis: {
@@ -61,5 +58,8 @@
         chart.draw(data, options);
         return false;
     }
-</script>
 
+
+
+
+</script>

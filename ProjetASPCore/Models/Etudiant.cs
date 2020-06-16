@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjetASPCore.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,7 +34,6 @@ namespace ProjetASPCore.Models
         [StringLength(8, ErrorMessage = "Le CIN doit contenir 8 caractères. ")]
         [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Le CIN ne peut contenir que des lettres et des chiffres.")]
         public string cin { get; set; }
-
 
         [EmailAddress(ErrorMessage = "Adresse email invalide.")]
         public string email { get; set; }
